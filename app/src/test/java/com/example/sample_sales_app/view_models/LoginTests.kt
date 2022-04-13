@@ -17,7 +17,7 @@ class LoginTests {
     private lateinit var result: RestResult
     private val dispatcher = TestCoroutineDispatcher()
 
-    private fun withScopeInitializer(scope: suspend CoroutineScope.() -> Unit) {
+    private fun withLoginScope(scope: suspend CoroutineScope.() -> Unit) {
         runBlocking {
             Dispatchers.setMain(dispatcher)
             loginViewModel = LoginViewModel()
@@ -28,7 +28,7 @@ class LoginTests {
     @DisplayName("Should retrieve currency JSON")
     @Test
     fun `is REST call result for currencyRequest a success`() {
-        withScopeInitializer {
+        withLoginScope {
             result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
             println(result.message)
             result.status shouldBe RestStatus.SUCCESS
@@ -38,7 +38,7 @@ class LoginTests {
     @DisplayName("Should retrieve ordrs JSON")
     @Test
     fun `is REST call result for ordersRequest a success`() {
-        withScopeInitializer {
+        withLoginScope {
             result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
             result.status shouldBe RestStatus.SUCCESS
         }
@@ -52,7 +52,7 @@ class LoginTests {
 
         @BeforeAll
         fun init() {
-            withScopeInitializer {
+            withLoginScope {
                 result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
             }
         }
