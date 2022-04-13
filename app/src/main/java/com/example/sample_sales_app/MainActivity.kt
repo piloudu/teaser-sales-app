@@ -1,5 +1,6 @@
 package com.example.sample_sales_app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        appContext = applicationContext
         super.onCreate(savedInstanceState)
         setContent {
             SampleSalesAppTheme {
@@ -21,6 +23,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        private lateinit var appContext: Context
+        fun getContext(): Context = appContext
     }
 }
 
