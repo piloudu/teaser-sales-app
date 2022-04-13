@@ -7,8 +7,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 
 
 class LoginViewModelTest {
@@ -45,6 +43,30 @@ class LoginViewModelTest {
     fun `is REST call result for currencyRequest a success`() {
         withScopeInitializer {
             result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+            result.status shouldBe RestStatus.SUCCESS
+        }
+    }
+
+    @Test
+    fun `is REST call state for ordersRequest not an null body`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
+            result.status shouldNotBe RestStatus.NULL_REST_CALL_BODY
+        }
+    }
+
+    @Test
+    fun `is REST call state for ordersRequest not a bad request`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
+            result.status shouldNotBe RestStatus.BAD_REQUEST
+        }
+    }
+
+    @Test
+    fun `is REST call result for ordersRequest a success`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
             result.status shouldBe RestStatus.SUCCESS
         }
     }
