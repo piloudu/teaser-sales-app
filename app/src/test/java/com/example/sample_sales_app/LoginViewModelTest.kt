@@ -1,22 +1,27 @@
 package com.example.sample_sales_app
 
-import junit.framework.Assert.assertNotNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import com.example.sample_sales_app.view_models.*
+import io.kotest.matchers.shouldNotBe
 import org.junit.Test
 
-val client = OkHttpClient()
-
-const val CURRENCIES_URL = "http://quiet-stone-2094.herokuapp.com/rates.json"
-const val ORDERS_URL = "http://quiet-stone-2094.herokuapp.com/transactions.json"
-
-val request = Request.Builder()
-    .url(CURRENCIES_URL).build()
 
 class LoginViewModelTest {
+    val mockJson = """{"example": true, "example1": 5}"""
+
     @Test
     fun `is REST call performed`() {
-        val result = client.newCall(request)
-        assertNotNull(result)
+        val result = try {
+            val response = client.newCall(currencyRequest).execute()
+            val callResult = response.body?.string()
+            println("ThisResult: $callResult")
+            callResult
+        } catch (e: Exception) {
+            LoginError.NO_CONNECTION.message
+        }
+        result shouldNotBe LoginError.NO_CONNECTION.message
+    }
+
+    @Test
+    fun `is the JSON deserialized`() {
     }
 }
