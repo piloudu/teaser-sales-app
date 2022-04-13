@@ -12,6 +12,10 @@ interface State
 
 interface ReduceAction
 
+interface ViewModelGetter {
+    fun getInstance(): MviViewModel<State, MviIntent, ReduceAction>
+}
+
 abstract class MviViewModel<S : State, I : MviIntent, R : ReduceAction>(
     initialState: S,
 ) : ViewModel() {
@@ -41,7 +45,7 @@ abstract class MviViewModel<S : State, I : MviIntent, R : ReduceAction>(
     fun handle(reduceAction: R) {
         reduceFlow.tryEmit(reduceAction)
     }
-    
+
     protected abstract suspend fun executeIntent(mviIntent: I)
 
     protected abstract suspend fun reduce(state: S, reduceAction: R): S

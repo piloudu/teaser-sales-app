@@ -8,7 +8,6 @@ import com.example.sample_sales_app.data.Order
 import com.example.sample_sales_app.utils.deserialize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import timber.log.Timber
@@ -32,12 +31,9 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
     private val client = OkHttpClient()
     internal val currencyRequest = Request.Builder().url(CURRENCIES_URL).build()
     internal val ordersRequest = Request.Builder().url(ORDERS_URL).build()
-    internal var currencyChangeList = listOf<CurrencyChange>()
-    internal var ordersList = listOf<Order>()
+    private var currencyChangeList = listOf<CurrencyChange>()
+    private var ordersList = listOf<Order>()
 
-    /**
-     * On Login, try to download and cache the data
-     */
     override suspend fun executeIntent(mviIntent: LoginIntent) {
         val action: LoginReduceAction
         getData()
@@ -49,8 +45,10 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
     suspend fun getData() {
         val currencyData = performRestCall(currencyRequest)
         val ordersData = performRestCall(ordersRequest)
-        currencyChangeList = currencyData.message.deserialize()
-        ordersList = ordersData.message.deserialize()
+        if (currencyData.isSuccess() && ordersData.isSuccess()) {
+            currencyChangeList = currencyData.message.deserialize()
+            ordersList = ordersData.message.deserialize()
+        }
     }
 
     override suspend fun reduce(state: LoginState, reduceAction: LoginReduceAction): LoginState {
@@ -71,6 +69,7 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
                 } ?: RestResult(RestStatus.NULL_REST_CALL_BODY, LoginError.NULL_REST_CALL_BODY.message)
             }
         } catch (e: Exception) {
+            Timber.tag(TAG).e(e)
             RestResult(RestStatus.BAD_REQUEST, LoginError.BAD_REQUEST.message)
         }
     }
@@ -95,6 +94,9 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
 
         fun getInstance(): LoginViewModel = loginViewModel
 
+        /**
+         * Download and cache the data only if data lists are empty
+         */
         suspend fun getCache(): CacheData {
             with(loginViewModel) {
                 return if (currencyChangeList.isEmpty() || ordersList.isEmpty()) {
@@ -110,13 +112,11 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
     }
 }
 
-
-internal const val CURRENCIES_URL = "http://quiet-stone-2094.herokuapp.com/rates.json"
-internal const val ORDERS_URL = "http://quiet-stone-2094.herokuapp.com/transactions.json"
+internal const val TAG = "LOGIN"
+internal const val CURRENCIES_URL = "https://quiet-stone-2094.herokuapp.com/rates.json"
+internal const val ORDERS_URL = "https://quiet-stone-2094.herokuapp.com/transactions.json"
 
 enum class LoginError(val message: String) {
     NULL_REST_CALL_BODY("Null call request body"),
     BAD_REQUEST("Bad request, check connection or request URL")
 }
-
-internal const val TAG = "LOGIN"
