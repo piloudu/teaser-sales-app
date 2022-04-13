@@ -24,42 +24,10 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `is REST call state for currencyRequest not an null body`() {
-        withScopeInitializer {
-            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
-            result.status shouldNotBe RestStatus.NULL_REST_CALL_BODY
-        }
-    }
-
-    @Test
-    fun `is REST call state for currencyRequest not a bad request`() {
-        withScopeInitializer {
-            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
-            result.status shouldNotBe RestStatus.BAD_REQUEST
-        }
-    }
-
-    @Test
     fun `is REST call result for currencyRequest a success`() {
         withScopeInitializer {
             result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
             result.status shouldBe RestStatus.SUCCESS
-        }
-    }
-
-    @Test
-    fun `is REST call state for ordersRequest not an null body`() {
-        withScopeInitializer {
-            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
-            result.status shouldNotBe RestStatus.NULL_REST_CALL_BODY
-        }
-    }
-
-    @Test
-    fun `is REST call state for ordersRequest not a bad request`() {
-        withScopeInitializer {
-            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
-            result.status shouldNotBe RestStatus.BAD_REQUEST
         }
     }
 
