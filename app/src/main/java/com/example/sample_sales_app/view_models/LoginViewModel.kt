@@ -46,7 +46,7 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
         val currencyDate = performRestCall(currencyRequest)
         val ordersData = performRestCall(ordersRequest)
         if (currencyDate.isSuccess() && ordersData.isSuccess()) {
-            handle(LoginReduceAction)
+            //handle(LoginReduceAction)
         }
     }
 
