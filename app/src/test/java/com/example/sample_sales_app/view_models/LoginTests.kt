@@ -2,8 +2,9 @@ package com.example.sample_sales_app.view_models
 
 import com.example.sample_sales_app.data.CurrencyChange
 import com.example.sample_sales_app.data.Order
+import com.example.sample_sales_app.utils.deserialize
+import com.example.sample_sales_app.utils.mapper
 import com.example.sample_sales_app.view_models.LoginViewModel.*
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.*
@@ -15,7 +16,6 @@ class LoginTests {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var result: RestResult
     private val dispatcher = TestCoroutineDispatcher()
-    private val mapper = jacksonObjectMapper()
 
     private fun withScopeInitializer(scope: suspend CoroutineScope.() -> Unit) {
         runBlocking {
@@ -44,12 +44,12 @@ class LoginTests {
         }
     }
 
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @DisplayName("On JSON retrieve")
     @Nested
     inner class DeserializeCurrencyChange {
-        private val mockCurrencyChange = """{"from": "CA", "to": "EUR", "rate": "0.76"}"""
+        private val mockCurrencyChange = """{"from": "CAD", "to": "EUR", "rate": "0.76"}"""
 
-        @DisplayName("should deserialize mock individual element")
         @BeforeAll
         fun init() {
             withScopeInitializer {
@@ -57,17 +57,18 @@ class LoginTests {
             }
         }
 
-        @DisplayName("should deserialize the currency change list")
+        @DisplayName("should deserialize mock individual element")
         @Test
         fun `is currency sample deserialized properly`() {
             val currencyChange: CurrencyChange = mapper.readValue(mockCurrencyChange)
             currencyChange shouldBe CurrencyChange("CAD", "EUR", "0.76")
         }
 
+        @DisplayName("should deserialize the currency change list")
         @Test
         fun `is currency JSON deserializer properly`() {
-            val currencyChanges: List<CurrencyChange> = mapper.readValue(result.message)
-            currencyChanges[1] shouldBe CurrencyChange("AUD", "USD", "0.77")
+            val currencyChanges: List<CurrencyChange> = result.message.deserialize()
+            currencyChanges.size shouldBe 6
         }
     }
 
@@ -75,6 +76,7 @@ class LoginTests {
     inner class DeserializeOrder {
         private val mockOrder = """{"sku": "T2006", "amount": "10.00", "currency": "USD"}"""
 
+        @DisplayName("should deserialize mock individual element")
         @Test
         fun `is orders JSON deserialized properly`() {
             val order: Order = mapper.readValue(mockOrder)

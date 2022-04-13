@@ -2,6 +2,11 @@ package com.example.sample_sales_app.view_models
 
 import android.widget.Toast
 import com.example.sample_sales_app.*
+import com.example.sample_sales_app.data.CurrencyChange
+import com.example.sample_sales_app.data.Order
+import com.example.sample_sales_app.utils.deserialize
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -36,16 +41,18 @@ sealed class LoginReduceAction : ReduceAction {
 
 class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(LoginState()) {
     private val client = OkHttpClient()
-    val currencyRequest = Request.Builder().url(CURRENCIES_URL).build()
-    val ordersRequest = Request.Builder().url(ORDERS_URL).build()
+    internal val currencyRequest = Request.Builder().url(CURRENCIES_URL).build()
+    internal val ordersRequest = Request.Builder().url(ORDERS_URL).build()
 
     /**
      * On Login, try to download and cache the data
      */
     override suspend fun executeIntent(mviIntent: LoginIntent) {
-        val currencyDate = performRestCall(currencyRequest)
+        val currencyData = performRestCall(currencyRequest)
         val ordersData = performRestCall(ordersRequest)
-        if (currencyDate.isSuccess() && ordersData.isSuccess()) {
+        if (currencyData.isSuccess() && ordersData.isSuccess()) {
+            val currencyChangeList = currencyData.message.deserialize<CurrencyChange>()
+            val ordersList = ordersData.message.deserialize<Order>()
             //handle(LoginReduceAction)
         }
     }
