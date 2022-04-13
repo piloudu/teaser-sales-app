@@ -45,7 +45,9 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
     override suspend fun executeIntent(mviIntent: LoginIntent) {
         val currencyDate = performRestCall(currencyRequest)
         val ordersData = performRestCall(ordersRequest)
-        //handle(LoginReduceAction)
+        if (currencyDate.isSuccess() && ordersData.isSuccess()) {
+            handle(LoginReduceAction)
+        }
     }
 
     override suspend fun reduce(state: LoginState, reduceAction: LoginReduceAction): LoginState {
@@ -66,17 +68,12 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
         }
     }
 
-    private fun getErrorMessageFor(loginError: LoginError) {
-        val message = loginError.message
-        when (loginError) {
-            LoginError.BAD_REQUEST -> errorPrompt(message)
-            LoginError.NULL_REST_CALL_BODY -> errorPrompt(message)
-        }
-    }
-
-    private fun errorPrompt(message: String) {
-        Timber.tag(TAG).e(message)
-        Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
+    private fun RestResult.isSuccess(): Boolean {
+        return if (status != RestStatus.SUCCESS) {
+            Timber.tag(TAG).e(message)
+            Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
+            false
+        } else true
     }
 
     data class RestResult(val status: RestStatus, val message: String)
