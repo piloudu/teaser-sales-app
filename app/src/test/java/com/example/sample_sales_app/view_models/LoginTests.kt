@@ -1,5 +1,6 @@
 package com.example.sample_sales_app.view_models
 
+import com.example.sample_sales_app.data.CacheData
 import com.example.sample_sales_app.data.CurrencyChange
 import com.example.sample_sales_app.data.Order
 import com.example.sample_sales_app.utils.deserialize
@@ -7,6 +8,7 @@ import com.example.sample_sales_app.utils.mapper
 import com.example.sample_sales_app.view_models.LoginViewModel.*
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -20,7 +22,7 @@ class LoginTests {
     private fun withLoginScope(scope: suspend CoroutineScope.() -> Unit) {
         runBlocking {
             Dispatchers.setMain(dispatcher)
-            loginViewModel = LoginViewModel()
+            loginViewModel = LoginViewModel.getInstance()
             scope()
         }
     }
@@ -35,7 +37,7 @@ class LoginTests {
         }
     }
 
-    @DisplayName("Should retrieve ordrs JSON")
+    @DisplayName("Should retrieve orders JSON")
     @Test
     fun `is REST call result for ordersRequest a success`() {
         withLoginScope {
@@ -81,6 +83,28 @@ class LoginTests {
         fun `is orders JSON deserialized properly`() {
             val order: Order = mapper.readValue(mockOrder)
             order shouldBe Order("T2006", "10.00", "USD")
+        }
+    }
+
+    @Nested
+    inner class CacheDataTest {
+        @DisplayName("is Cache created properly")
+        @Test
+        fun `is Cache created properly`() {
+            withLoginScope {
+                val cache = LoginViewModel.getCache()
+                cache.shouldBeInstanceOf<CacheData>()
+            }
+        }
+
+        @DisplayName("is Cache always the same object")
+        @Test
+        fun `is Cache always the same object`() {
+            withLoginScope {
+                val cache = LoginViewModel.getCache()
+                val cache1 = LoginViewModel.getCache()
+                cache.hashCode() shouldBe cache1.hashCode()
+            }
         }
     }
 }

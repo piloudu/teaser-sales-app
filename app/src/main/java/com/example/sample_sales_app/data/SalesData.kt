@@ -12,7 +12,7 @@ data class Order(
     val currency: String
 )
 
-data class Cache(
-    val currencyChanges: List<CurrencyChange>,
-    val orders: List<Order>
-)
+abstract class CacheData {
+    abstract val currencyChanges: List<CurrencyChange>
+    abstract val orders: List<Order>
+}

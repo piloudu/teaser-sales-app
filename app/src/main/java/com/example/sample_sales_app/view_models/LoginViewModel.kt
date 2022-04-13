@@ -2,18 +2,19 @@ package com.example.sample_sales_app.view_models
 
 import android.widget.Toast
 import com.example.sample_sales_app.*
-import com.example.sample_sales_app.data.Cache
+import com.example.sample_sales_app.data.CacheData
 import com.example.sample_sales_app.data.CurrencyChange
 import com.example.sample_sales_app.data.Order
 import com.example.sample_sales_app.utils.deserialize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import timber.log.Timber
 
 enum class LoginStatus {
-    IDLE, LOADING, LOADED, ERROR
+    IDLE, LOADING, LOADED
 }
 
 data class LoginState(
@@ -25,44 +26,39 @@ object LoginIntent : MviIntent
 sealed class LoginReduceAction(open val message: String = "") : ReduceAction {
     data class Loading(override val message: String = LoginStatus.LOADING.name) : LoginReduceAction()
     data class Loaded(override val message: String = LoginStatus.LOADED.name) : LoginReduceAction()
-    data class Error(override val message: String = LoginStatus.ERROR.name) : LoginReduceAction()
 }
 
-class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(LoginState()) {
+class LoginViewModel private constructor() : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(LoginState()) {
     private val client = OkHttpClient()
     internal val currencyRequest = Request.Builder().url(CURRENCIES_URL).build()
     internal val ordersRequest = Request.Builder().url(ORDERS_URL).build()
+    internal var currencyChangeList = listOf<CurrencyChange>()
+    internal var ordersList = listOf<Order>()
 
     /**
      * On Login, try to download and cache the data
      */
     override suspend fun executeIntent(mviIntent: LoginIntent) {
         val action: LoginReduceAction
-        val currencyData = performRestCall(currencyRequest)
-        val ordersData = performRestCall(ordersRequest)
-
-        if (currencyData.isSuccess() && ordersData.isSuccess()) {
-            currencyChangeList = currencyData.message.deserialize()
-            ordersList = ordersData.message.deserialize()
-            action = LoginReduceAction.Loaded()
-            handle(action)
-        } else action = LoginReduceAction.Error()
-
+        getData()
+        action = LoginReduceAction.Loaded()
+        handle(action)
         Timber.tag(TAG).d("Action state is ${action.message}")
     }
 
+    suspend fun getData() {
+        val currencyData = performRestCall(currencyRequest)
+        val ordersData = performRestCall(ordersRequest)
+        currencyChangeList = currencyData.message.deserialize()
+        ordersList = ordersData.message.deserialize()
+    }
+
     override suspend fun reduce(state: LoginState, reduceAction: LoginReduceAction): LoginState {
-        val newStatus = when (reduceAction) {
-            is LoginReduceAction.Loaded -> state.copy(
-                loginStatus = LoginStatus.LOADED
-            )
-            is LoginReduceAction.Error -> state.copy(
-                loginStatus = LoginStatus.ERROR
-            )
-            else -> state
-        }
-        Timber.tag(TAG).d("LoginStatus is $newStatus")
-        return newStatus
+        val newState = state.copy(
+            loginStatus = LoginStatus.LOADED
+        )
+        Timber.tag(TAG).d("LoginStatus is ${newState.loginStatus}")
+        return newState
     }
 
     suspend fun performRestCall(request: Request): RestResult {
@@ -94,15 +90,26 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
     }
 
     companion object {
-        var currencyChangeList = listOf<CurrencyChange>()
-        var ordersList = listOf<Order>()
+        private val loginViewModel = LoginViewModel()
+        private lateinit var cache: CacheData
 
-        fun getCache() = Cache(
-            currencyChanges = currencyChangeList,
-            orders = ordersList
-        )
+        fun getInstance(): LoginViewModel = loginViewModel
+
+        suspend fun getCache(): CacheData {
+            with(loginViewModel) {
+                return if (currencyChangeList.isEmpty() || ordersList.isEmpty()) {
+                    getData()
+                    cache = object : CacheData() {
+                        override val currencyChanges = currencyChangeList
+                        override val orders = ordersList
+                    }
+                    cache
+                } else cache
+            }
+        }
     }
 }
+
 
 internal const val CURRENCIES_URL = "http://quiet-stone-2094.herokuapp.com/rates.json"
 internal const val ORDERS_URL = "http://quiet-stone-2094.herokuapp.com/transactions.json"
