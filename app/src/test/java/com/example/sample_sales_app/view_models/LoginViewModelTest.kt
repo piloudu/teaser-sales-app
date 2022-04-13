@@ -5,66 +5,47 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.setMain
 import org.junit.Test
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 
 
 class LoginViewModelTest {
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var result: RestResult
     val dispatcher = TestCoroutineDispatcher()
     val mockJson = """{"example": true, "example1": 5}"""
 
-    @BeforeEach
-    fun initViewModel() {
-    }
-
-    @Test
-    fun `is REST call result for currencyRequest not an empty JSON`() {
+    fun withScopeInitializer(scope: suspend CoroutineScope.() -> Unit) {
         runBlocking {
-            Dispatchers.setMain(TestCoroutineDispatcher())
-            val loginViewModel = LoginViewModel()
-            val result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
-            println("Result: ${result.status.name}")
-            result.status shouldNotBe RestStatus.EMPTY_JSON
+            Dispatchers.setMain(dispatcher)
+            loginViewModel = LoginViewModel()
+            scope()
         }
     }
-
-    @Nested
-    inner class CurrencyRetrieveTests {
-        private lateinit var result: RestResult
-
-        @BeforeEach
-        fun init() {
-            runBlocking {
-                launch(Dispatchers.Main) {
-                    //result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
-                }
-            }
-            println("Result: ${result.status.name}")
-        }
-
-        @Test
-        fun `is REST call result for currencyRequest not an empty JSON`() {
-            result.status shouldNotBe RestStatus.EMPTY_JSON
-        }
-
-        //@Test
-        //fun `is REST call result not connection error`() {
-        //    result.status shouldNotBe RestStatus.NO_CONNECTION
-        //}
-
-        //@Test
-        //fun `is REST call result success`() {
-        //    result.status shouldBe RestStatus.SUCCESS
-        //}
-    }
-
 
     @Test
-    fun `is the JSON deserialized`() {
+    fun `is REST call state for currencyRequest not an null body`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+            result.status shouldNotBe RestStatus.NULL_REST_CALL_BODY
+        }
+    }
+
+    @Test
+    fun `is REST call state for currencyRequest not a bad request`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+            result.status shouldNotBe RestStatus.BAD_REQUEST
+        }
+    }
+
+    @Test
+    fun `is REST call result for currencyRequest a success`() {
+        withScopeInitializer {
+            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+            result.status shouldBe RestStatus.SUCCESS
+        }
     }
 }

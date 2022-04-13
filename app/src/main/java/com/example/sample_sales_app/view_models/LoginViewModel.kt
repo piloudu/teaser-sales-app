@@ -3,7 +3,6 @@ package com.example.sample_sales_app.view_models
 import android.widget.Toast
 import com.example.sample_sales_app.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -13,8 +12,8 @@ internal const val CURRENCIES_URL = "http://quiet-stone-2094.herokuapp.com/rates
 internal const val ORDERS_URL = "http://quiet-stone-2094.herokuapp.com/transactions.json"
 
 enum class LoginError(val message: String) {
-    EMPTY_JSON("Empty JSON retrieved"),
-    NO_CONNECTION("You have no internet connection")
+    NULL_REST_CALL_BODY("Null call request body"),
+    BAD_REQUEST("Bad request, check connection or request URL")
 }
 
 internal const val TAG = "LOGIN"
@@ -60,18 +59,18 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
                 val result = response.body?.string()
                 result?.let {
                     RestResult(RestStatus.SUCCESS, result)
-                } ?: RestResult(RestStatus.EMPTY_JSON, LoginError.EMPTY_JSON.message)
+                } ?: RestResult(RestStatus.NULL_REST_CALL_BODY, LoginError.NULL_REST_CALL_BODY.message)
             }
-        } catch (e: IllegalStateException) {
-            RestResult(RestStatus.NO_CONNECTION, LoginError.NO_CONNECTION.message)
+        } catch (e: Exception) {
+            RestResult(RestStatus.BAD_REQUEST, LoginError.BAD_REQUEST.message)
         }
     }
 
     private fun getErrorMessageFor(loginError: LoginError) {
         val message = loginError.message
         when (loginError) {
-            LoginError.NO_CONNECTION -> errorPrompt(message)
-            LoginError.EMPTY_JSON -> errorPrompt(message)
+            LoginError.BAD_REQUEST -> errorPrompt(message)
+            LoginError.NULL_REST_CALL_BODY -> errorPrompt(message)
         }
     }
 
@@ -83,7 +82,7 @@ class LoginViewModel : MviViewModel<LoginState, LoginIntent, LoginReduceAction>(
     data class RestResult(val status: RestStatus, val message: String)
 
     enum class RestStatus {
-        SUCCESS, EMPTY_JSON, NO_CONNECTION
+        SUCCESS, NULL_REST_CALL_BODY, BAD_REQUEST
     }
 
 }
