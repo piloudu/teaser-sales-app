@@ -11,3 +11,8 @@ data class Order(
     val amount: String,
     val currency: String
 )
+
+data class Cache(
+    val currencyChanges: List<CurrencyChange>,
+    val orders: List<Order>
+)
