@@ -46,7 +46,7 @@ abstract class MviViewModel<S : State, I : MviIntent, R : ReduceAction>(
         reduceFlow.tryEmit(reduceAction)
     }
 
-    protected abstract suspend fun executeIntent(mviIntent: I)
+    abstract suspend fun executeIntent(mviIntent: I)
 
-    protected abstract suspend fun reduce(state: S, reduceAction: R): S
+    abstract suspend fun reduce(state: S, reduceAction: R): S
 }

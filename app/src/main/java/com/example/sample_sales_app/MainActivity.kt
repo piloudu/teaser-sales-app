@@ -10,17 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewModelScope
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
-import com.example.sample_sales_app.view_models.LoginViewModel.Companion.getCache
-import com.example.sample_sales_app.view_models.LoginViewModel.Companion.getInstance
-import kotlinx.coroutines.Dispatchers
+import com.example.sample_sales_app.view_models.LoginIntent
+import com.example.sample_sales_app.view_models.LoginStatus
+import com.example.sample_sales_app.view_models.LoginViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,38 +28,52 @@ class MainActivity : ComponentActivity() {
             SampleSalesAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    Greeting()
                 }
             }
         }
     }
 
     companion object {
+        val onClick: () -> Unit = {
+            clicks++
+        }
+        var clicks = 0
         private lateinit var appContext: Context
         fun getContext(): Context = appContext
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    val coroutineScope = rememberCoroutineScope()
+fun Greeting() {
+    var clicks by remember { mutableStateOf(MainActivity.clicks) }
+    val loginViewModel = LoginViewModel.getInstance()
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable {
-                coroutineScope.launch {
-                    getCache()
-                }
-            },
-        text = "Hello $name!"
+            .clickable { clicks = addClick(clicks) },
+        text = "You have clicked $clicks times",
+        color = getColorFor(loginViewModel.state.value.loginStatus)
     )
+}
+
+fun getColorFor(loginStatus: LoginStatus): Color {
+    return when (loginStatus) {
+        LoginStatus.LOADED -> Color.Red
+        else -> Color.Unspecified
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     SampleSalesAppTheme {
-        Greeting("Android")
+        Greeting()
     }
+}
+
+fun addClick(value: Int): Int {
+    return value + 1
 }

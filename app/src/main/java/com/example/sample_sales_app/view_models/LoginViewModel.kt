@@ -88,7 +88,7 @@ class LoginViewModel private constructor() : MviViewModel<LoginState, LoginInten
         SUCCESS, NULL_REST_CALL_BODY, BAD_REQUEST
     }
 
-    companion object {
+    companion object LoginCompanion {
         private val loginViewModel = LoginViewModel()
         private lateinit var cache: CacheData
 
