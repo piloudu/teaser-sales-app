@@ -2,25 +2,28 @@ package com.example.sample_sales_app.view_model
 
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.CurrencyChange
+import com.example.sample_sales_app.data_model.HttpUrls
 import com.example.sample_sales_app.data_model.Order
+import com.example.sample_sales_app.get_data.RestCall
+import com.example.sample_sales_app.get_data.deserialize
 import com.example.sample_sales_app.utils.mapper
-import com.example.sample_sales_app.view_model.LoginViewModel.*
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.*
 
 class LoginTests {
-    private lateinit var loginViewModel: LoginViewModel
-    private lateinit var result: RestResult
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var result: RestCall.RestResult
     private val dispatcher = TestCoroutineDispatcher()
 
     private fun withLoginScope(scope: suspend CoroutineScope.() -> Unit) {
         runBlocking {
             Dispatchers.setMain(dispatcher)
-            loginViewModel = LoginViewModel.getInstance()
+            mainViewModel = MainViewModel()
             scope()
         }
     }
@@ -29,9 +32,9 @@ class LoginTests {
     @Test
     fun `is REST call result for currencyRequest a success`() {
         withLoginScope {
-            result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+            result = RestCall.call(HttpUrls.CURRENCIES_URL)
             println(result.message)
-            result.status shouldBe RestStatus.SUCCESS
+            result.status shouldBe RestCall.RestStatus.SUCCESS
         }
     }
 
@@ -39,8 +42,8 @@ class LoginTests {
     @Test
     fun `is REST call result for ordersRequest a success`() {
         withLoginScope {
-            result = loginViewModel.performRestCall(loginViewModel.ordersRequest)
-            result.status shouldBe RestStatus.SUCCESS
+            result = RestCall.call(HttpUrls.ORDERS_URL)
+            result.status shouldBe RestCall.RestStatus.SUCCESS
         }
     }
 
@@ -53,7 +56,7 @@ class LoginTests {
         @BeforeAll
         fun init() {
             withLoginScope {
-                result = loginViewModel.performRestCall(loginViewModel.currencyRequest)
+                result = RestCall.call(HttpUrls.CURRENCIES_URL)
             }
         }
 
@@ -90,7 +93,7 @@ class LoginTests {
         @Test
         fun `is Cache created properly`() {
             withLoginScope {
-                val cache = LoginViewModel.getCache()
+                val cache = mainViewModel.state.value.cache
                 cache.shouldBeInstanceOf<CacheData>()
             }
         }
@@ -99,8 +102,8 @@ class LoginTests {
         @Test
         fun `is Cache always the same object`() {
             withLoginScope {
-                val cache = LoginViewModel.getCache()
-                val cache1 = LoginViewModel.getCache()
+                val cache = mainViewModel.state.value.cache
+                val cache1 = mainViewModel.state.value.cache
                 cache.hashCode() shouldBe cache1.hashCode()
             }
         }

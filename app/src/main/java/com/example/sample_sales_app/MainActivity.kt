@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
+import com.example.sample_sales_app.view_model.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,23 +44,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting() {
     var clicks by remember { mutableStateOf(MainActivity.clicks) }
-    val loginViewModel = LoginViewModel.getInstance()
+    val loginViewModel = MainViewModel()
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .clickable { clicks = addClick(clicks) },
-        text = "You have clicked $clicks times",
-        color = getColorFor(loginViewModel.state.value.loginStatus)
+        text = "You have clicked $clicks times"
     )
-}
-
-fun getColorFor(loginStatus: LoginStatus): Color {
-    return when (loginStatus) {
-        LoginStatus.LOADED -> Color.Red
-        else -> Color.Unspecified
-    }
-
 }
 
 @Preview(showBackground = true)

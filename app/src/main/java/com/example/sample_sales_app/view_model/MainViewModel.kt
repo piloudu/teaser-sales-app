@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 14/4/22 by Ancora. All rights reserved.
- * This code cannot be used, copied, modified and/or distributed without
- * the express permission of the authors.
- *
- * Created by xoan on 14/4/22
- */
-
 package com.example.sample_sales_app.view_model
 
 import com.example.sample_sales_app.data_model.CacheData
