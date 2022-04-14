@@ -1,6 +1,6 @@
 package com.example.sample_sales_app.view_model
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
 
 abstract class Reducer<S : UiState, in I : UserIntent>(initialState: S) {
 

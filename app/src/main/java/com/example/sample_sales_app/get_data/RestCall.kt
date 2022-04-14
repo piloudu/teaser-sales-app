@@ -12,11 +12,12 @@ import timber.log.Timber
 object RestCall {
     private val client = OkHttpClient()
 
-    suspend fun call(url: HttpUrls): RestResult {
+    suspend fun restCallFor(url: HttpUrls): RestResult {
         val restResult = try {
             withContext(Dispatchers.IO) {
                 val request = Request.Builder().url(url.string).build()
                 val result = client.newCall(request).execute().body?.string()
+
                 result?.let {
                     RestResult(RestStatus.SUCCESS, result)
                 } ?: RestResult(

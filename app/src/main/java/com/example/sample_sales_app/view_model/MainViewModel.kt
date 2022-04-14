@@ -6,7 +6,7 @@ import com.example.sample_sales_app.data_model.Order
 import kotlinx.coroutines.flow.StateFlow
 
 
-class MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
+object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
 
     private val reducer = MainReducer(MainActivityState.initial())
 
