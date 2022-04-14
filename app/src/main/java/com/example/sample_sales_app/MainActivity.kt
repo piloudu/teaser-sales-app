@@ -15,10 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
-import com.example.sample_sales_app.view_models.LoginIntent
-import com.example.sample_sales_app.view_models.LoginStatus
-import com.example.sample_sales_app.view_models.LoginViewModel
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

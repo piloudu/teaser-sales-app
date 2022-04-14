@@ -1,14 +1,12 @@
-package com.example.sample_sales_app.view_models
+package com.example.sample_sales_app.view_model
 
 import com.example.sample_sales_app.data.CacheData
 import com.example.sample_sales_app.data.CurrencyChange
 import com.example.sample_sales_app.data.Order
-import com.example.sample_sales_app.utils.deserialize
 import com.example.sample_sales_app.utils.mapper
-import com.example.sample_sales_app.view_models.LoginViewModel.*
+import com.example.sample_sales_app.view_model.LoginViewModel.*
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
