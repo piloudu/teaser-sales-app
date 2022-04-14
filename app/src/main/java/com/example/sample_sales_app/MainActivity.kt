@@ -14,6 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
+import com.example.sample_sales_app.view_model.MainActivityState
+import com.example.sample_sales_app.view_model.MainActivityUserIntent
+import com.example.sample_sales_app.view_model.MainViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +43,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting() {
-    var clicks by remember { mutableStateOf(MainActivity.clicks) }
+fun Greeting(callback: () -> Unit) {
+    val state by MainViewModel.state.collectAsState()
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clickable { clicks = addClick(clicks) },
-        text = "You have clicked $clicks times"
+            .clickable { MainViewModel.sendIntent(MainActivityUserIntent.Login) },
+        text = "Hello World!"
     )
 }
 
