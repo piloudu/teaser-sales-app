@@ -1,4 +1,4 @@
-package com.example.sample_sales_app.data
+package com.example.sample_sales_app.data_model
 
 data class CurrencyChange(
     val from: String,

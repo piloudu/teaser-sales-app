@@ -7,8 +7,8 @@ abstract class Reducer<S : UiState, in I : UserIntent>(initialState: S) {
     private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
     val state = _state
 
-    fun sendEvent(event: I) {
-        reduce(_state.value, event)
+    fun sendIntent(intent: I) {
+        reduce(_state.value, intent)
     }
 
     fun setState(newState: S) {
