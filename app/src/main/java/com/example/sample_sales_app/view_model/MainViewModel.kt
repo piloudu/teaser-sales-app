@@ -1,16 +1,12 @@
 package com.example.sample_sales_app.view_model
 
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
-import com.example.sample_sales_app.MainActivity
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.get_data.Cache
 import com.example.sample_sales_app.utils.toastMessage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
@@ -30,7 +26,7 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
                     cacheData()
                     setState(
                         oldState.copy(
-                            innerState = AppState.LOGIN,
+                            innerState = AppState.MAIN,
                             cache = state.value.cache
                         )
                     )
@@ -60,11 +56,11 @@ data class MainActivityState(
         fun initial() = MainActivityState(
             isLoading = true,
             cache = CacheData(),
-            innerState = AppState.IDLE
+            innerState = AppState.LOGIN
         )
     }
 }
 
 enum class AppState {
-    IDLE, LOGIN
+    LOGIN, MAIN
 }

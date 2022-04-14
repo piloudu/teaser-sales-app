@@ -1,7 +1,5 @@
 package com.example.sample_sales_app.get_data
 
-import android.widget.Toast
-import com.example.sample_sales_app.MainActivity
 import com.example.sample_sales_app.utils.toastMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
