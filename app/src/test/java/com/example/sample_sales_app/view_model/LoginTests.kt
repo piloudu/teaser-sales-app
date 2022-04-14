@@ -2,11 +2,8 @@ package com.example.sample_sales_app.view_model
 
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.CurrencyChange
-import com.example.sample_sales_app.data_model.HttpUrls
 import com.example.sample_sales_app.data_model.Order
-import com.example.sample_sales_app.get_data.Cache
-import com.example.sample_sales_app.get_data.RestCall
-import com.example.sample_sales_app.get_data.deserialize
+import com.example.sample_sales_app.get_data.*
 import com.example.sample_sales_app.utils.mapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
@@ -17,7 +14,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.*
 
 class LoginTests {
-    private lateinit var result: RestCall.RestResult
+    private lateinit var result: RestResult
     private val dispatcher = TestCoroutineDispatcher()
 
     private fun withLoginScope(scope: suspend CoroutineScope.() -> Unit) {

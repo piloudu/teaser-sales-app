@@ -2,7 +2,6 @@ package com.example.sample_sales_app.get_data
 
 import android.widget.Toast
 import com.example.sample_sales_app.MainActivity
-import com.example.sample_sales_app.data_model.HttpUrls
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -33,19 +32,27 @@ object RestCall {
         return restResult
     }
 
-    data class RestResult(val status: RestStatus, val message: String)
-
     enum class RestStatus {
         SUCCESS, NULL_REST_CALL_BODY, BAD_REQUEST
     }
+}
 
-    private fun RestResult.isSuccess(): Boolean {
-        return if (status != RestStatus.SUCCESS) {
+data class RestResult(val status: RestCall.RestStatus, val message: String) {
+
+    suspend fun isSuccess(): Boolean {
+        return if (status != RestCall.RestStatus.SUCCESS) {
             Timber.e(message)
-            Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
+            }
             false
         } else true
     }
+}
+
+enum class HttpUrls(val string: String) {
+    CURRENCIES_URL("https://quiet-stone-2094.herokuapp.com/rates.json"),
+    ORDERS_URL("https://quiet-stone-2094.herokuapp.com/transactions.json")
 }
 
 enum class RestCallError(val message: String) {

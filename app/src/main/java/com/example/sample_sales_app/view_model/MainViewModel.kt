@@ -2,8 +2,6 @@ package com.example.sample_sales_app.view_model
 
 import androidx.lifecycle.viewModelScope
 import com.example.sample_sales_app.data_model.CacheData
-import com.example.sample_sales_app.data_model.CurrencyChange
-import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.get_data.Cache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +27,7 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
                         val cache = Cache.get()
                         setState(
                             oldState.copy(
+                                innerState = AppState.LOGIN,
                                 cache = cache
                             )
                         )
@@ -49,18 +48,19 @@ sealed class MainActivityUserIntent : UserIntent {
 }
 
 data class MainActivityState(
+    val innerState: AppState,
     val isLoading: Boolean,
     val cache: CacheData,
 ) : UiState {
     companion object {
-        private val initialCache = object : CacheData() {
-            override val currencyChanges = emptyList<CurrencyChange>()
-            override val orders = emptyList<Order>()
-        }
-
         fun initial() = MainActivityState(
             isLoading = true,
-            cache = initialCache
+            cache = CacheData(),
+            innerState = AppState.IDLE
         )
     }
+}
+
+enum class AppState {
+    IDLE, LOGIN
 }
