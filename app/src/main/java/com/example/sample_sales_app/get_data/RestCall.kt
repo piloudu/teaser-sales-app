@@ -2,6 +2,7 @@ package com.example.sample_sales_app.get_data
 
 import android.widget.Toast
 import com.example.sample_sales_app.MainActivity
+import com.example.sample_sales_app.utils.toastMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -43,7 +44,7 @@ data class RestResult(val status: RestCall.RestStatus, val message: String) {
         return if (status != RestCall.RestStatus.SUCCESS) {
             Timber.e(message)
             withContext(Dispatchers.Main) {
-                Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
+                toastMessage(message)
             }
             false
         } else true
