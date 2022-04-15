@@ -38,7 +38,8 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
     private fun cacheData() {
         viewModelScope.launch(Dispatchers.Main) {
             state.value.cache = Cache.get()
-            toastMessage("Data cached")
+            if (state.value.cache != CacheData())
+                toastMessage("Data cached")
         }
     }
 }
