@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +21,9 @@ import com.example.sample_sales_app.view_model.MainViewModel
 
 @Composable
 fun LoginScreen(modifier: Modifier) {
-    Box(modifier = modifier.clickable {
+    Box(modifier = modifier
+        .testTag("LoginScreen")
+        .clickable {
         MainViewModel.sendIntent(MainActivityUserIntent.Login)
     }) {
         Column(
@@ -30,7 +33,9 @@ fun LoginScreen(modifier: Modifier) {
             Spacer(Modifier.height(72.dp))
             LoginScreenText(
                 text = "Welcome to Sample Sales Application!",
-                modifier = Modifier.weight(2f)
+                modifier = Modifier
+                    .testTag("Welcome text")
+                    .weight(2f)
             )
             Emoji(
                 text = "👋",
@@ -43,7 +48,9 @@ fun LoginScreen(modifier: Modifier) {
                 text = "Click anywhere to start",
                 fontWeight = FontWeight.Light,
                 fontSize = 20.sp,
-                modifier = Modifier.weight(2f)
+                modifier = Modifier
+                    .testTag("Action text")
+                    .weight(2f)
             )
             Spacer(Modifier.height(16.dp))
             ArrowsBlock(modifier = Modifier.weight(5f))

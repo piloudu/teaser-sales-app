@@ -17,14 +17,15 @@ import com.example.sample_sales_app.view_model.AppState
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
+val modifier = Modifier
+    .fillMaxSize()
+    .background(color = Color.White)
+
 @Composable
 fun MainActivityScreen(
 ) {
     val state by MainViewModel.state.collectAsState()
 
-    val modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color.White)
     Box(
         modifier = modifier
     ) {
