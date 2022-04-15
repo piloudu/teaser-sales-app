@@ -15,6 +15,9 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
     override val state: StateFlow<MainActivityState> = reducer.state
 
     fun sendIntent(userIntent: MainActivityUserIntent) {
+        viewModelScope.launch(Dispatchers.Main) {
+            userIntent.setStateCache(reducer.state.value)
+        }
         reducer.sendIntent(userIntent)
     }
 
@@ -23,7 +26,6 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
         override fun reduce(oldState: MainActivityState, userIntent: MainActivityUserIntent) {
             when (userIntent) {
                 is MainActivityUserIntent.Login -> {
-                    cacheData()
                     setState(
                         oldState.copy(
                             innerState = AppState.MAIN,
@@ -34,18 +36,17 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
             }
         }
     }
-
-    private fun cacheData() {
-        viewModelScope.launch(Dispatchers.Main) {
-            state.value.cache = Cache.get()
-            if (state.value.cache != CacheData())
-                toastMessage("Data cached")
-        }
-    }
 }
 
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
+
+    suspend fun setStateCache(state: MainActivityState) {
+        val oldCache = MainViewModel.state.value.cache
+        MainViewModel.state.value.cache = Cache.get()
+        if (oldCache != MainViewModel.state.value.cache)
+            toastMessage("Data cached")
+    }
 }
 
 data class MainActivityState(

@@ -1,6 +1,7 @@
 package com.example.sample_sales_app.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.sample_sales_app.view_model.AppState
+import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
 @Composable
@@ -40,6 +42,10 @@ fun MainScreen(modifier: Modifier) {
         color = Color.Cyan,
         fontSize = 30.sp,
         text = "You are now in the Main Screen",
-        modifier = modifier.wrapContentHeight()
+        modifier = modifier
+            .wrapContentHeight()
+            .clickable {
+                MainViewModel.sendIntent(MainActivityUserIntent.Login)
+            }
     )
 }
