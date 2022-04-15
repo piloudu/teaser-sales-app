@@ -19,10 +19,19 @@ import androidx.compose.ui.unit.sp
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
+enum class LoginScreenTags {
+    GREETING, LOGIN_INSTRUCTION, LOGIN_SCREEN
+}
+
+enum class LoginScreenMessages(val message: String) {
+    GREETING("Welcome to Sample Sales Application!"),
+    INSTRUCTION("Click anywhere to start")
+}
+
 @Composable
 fun LoginScreen(modifier: Modifier) {
     Box(modifier = modifier
-        .testTag("LoginScreen")
+        .testTag(LoginScreenTags.LOGIN_SCREEN.name)
         .clickable {
         MainViewModel.sendIntent(MainActivityUserIntent.Login)
     }) {
@@ -32,9 +41,9 @@ fun LoginScreen(modifier: Modifier) {
         ) {
             Spacer(Modifier.height(72.dp))
             LoginScreenText(
-                text = "Welcome to Sample Sales Application!",
+                text = LoginScreenMessages.GREETING.message,
                 modifier = Modifier
-                    .testTag("Welcome text")
+                    .testTag(LoginScreenTags.GREETING.name)
                     .weight(2f)
             )
             Emoji(
@@ -45,11 +54,11 @@ fun LoginScreen(modifier: Modifier) {
             )
             Spacer(Modifier.height(32.dp))
             LoginScreenText(
-                text = "Click anywhere to start",
+                text = LoginScreenMessages.INSTRUCTION.message,
                 fontWeight = FontWeight.Light,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .testTag("Action text")
+                    .testTag(LoginScreenTags.LOGIN_INSTRUCTION.name)
                     .weight(2f)
             )
             Spacer(Modifier.height(16.dp))

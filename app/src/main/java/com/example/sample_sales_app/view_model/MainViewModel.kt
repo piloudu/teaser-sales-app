@@ -52,7 +52,7 @@ sealed class MainActivityUserIntent : UserIntent {
 data class MainActivityState(
     val innerState: AppState,
     val isLoading: Boolean,
-    var cache: CacheData,
+    var cache: CacheData
 ) : UiState {
     companion object {
         fun initial() = MainActivityState(
