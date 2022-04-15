@@ -38,11 +38,14 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.10'
+        kotlinCompilerVersion '1.6.10'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            exclude "**/attach_hotspot_windows.dll"
+            exclude "META-INF/licenses/**"
+            exclude "META-INF/LICENSE**"
         }
     }
     testOptions {
@@ -70,8 +73,10 @@ dependencies {
     testImplementation 'io.kotest:kotest-runner-junit5:5.2.3'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$compose_version"
+    androidTestImplementation 'io.kotest:kotest-runner-junit5:5.2.3'
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 }
