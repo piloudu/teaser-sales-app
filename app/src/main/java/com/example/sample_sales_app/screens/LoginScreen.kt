@@ -20,7 +20,7 @@ import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
 enum class LoginScreenTags {
-    GREETING, LOGIN_INSTRUCTION, LOGIN_SCREEN
+    LOGIN_SCREEN, GREETING_MESSAGE, GREETING_EMOJI, LOGIN_INSTRUCTION, ARROWS
 }
 
 enum class LoginScreenMessages(val message: String) {
@@ -43,12 +43,13 @@ fun LoginScreen(modifier: Modifier) {
             LoginScreenText(
                 text = LoginScreenMessages.GREETING.message,
                 modifier = Modifier
-                    .testTag(LoginScreenTags.GREETING.name)
+                    .testTag(LoginScreenTags.GREETING_MESSAGE.name)
                     .weight(2f)
             )
             Emoji(
                 text = "👋",
                 modifier = Modifier
+                    .testTag(LoginScreenTags.GREETING_EMOJI.name)
                     .weight(2f)
                     .padding(top = 24.dp)
             )
@@ -62,7 +63,10 @@ fun LoginScreen(modifier: Modifier) {
                     .weight(2f)
             )
             Spacer(Modifier.height(16.dp))
-            ArrowsBlock(modifier = Modifier.weight(5f))
+            ArrowsBlock(modifier = Modifier
+                .testTag(LoginScreenTags.ARROWS.name)
+                .weight(5f)
+            )
             Spacer(Modifier.height(72.dp))
         }
     }
