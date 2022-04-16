@@ -56,9 +56,9 @@ fun MainScreen(
         Spacer(Modifier.weight(1f))
         if (screenHeight > screenWidth) {
             Column(Modifier.weight(3f)) {
-                CurrencyButtonRow(modifier = Modifier, currencies = listOf(EUR, USD))
+                CurrencyButtonRow(currencies = listOf(EUR, USD))
                 Spacer(Modifier.weight(1f))
-                CurrencyButtonRow(modifier = Modifier, currencies = listOf(CAD, AUD))
+                CurrencyButtonRow(currencies = listOf(CAD, AUD))
                 Spacer(Modifier.weight(2f))
             }
         } else Row(Modifier) {
@@ -127,8 +127,8 @@ fun DropdownPanel(
                     .height(300.dp)
             ) {
                 orderCodes.forEach { order ->
-                    val isSelected = orderCode == order
-                    val style = if (isSelected)
+                    val selected = state.mainScreenInfo.selectedOrder == order
+                    val style = if (selected)
                         MaterialTheme.typography.body1.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.Red
@@ -142,6 +142,7 @@ fun DropdownPanel(
                         onClick = {
                             expanded = false
                             orderCode = order
+                            MainViewModel.sendIntent(MainActivityUserIntent.SelectOrder(order))
                         }) {
                         Text(
                             order,
@@ -159,14 +160,13 @@ fun DropdownPanel(
 fun CurrencyButton(
     modifier: Modifier,
     currency: Currency,
-    //resImage: Int,
 ) {
     val state by MainViewModel.state.collectAsState()
     var selected = state.mainScreenInfo.selectedCurrency == currency
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    val backgroundColor = if (selected) Color.Blue else Color.Gray
+    val backgroundColor = if (selected) Color.Blue else Color.LightGray
 
     val buttonSize = if (screenHeight > screenWidth) screenHeight / 6
     else screenWidth / 6
@@ -179,7 +179,7 @@ fun CurrencyButton(
             },
         shape = RoundedCornerShape(15),
         colors = outlinedButtonColors(
-            backgroundColor = Color.LightGray,
+            backgroundColor = backgroundColor,
             contentColor = Color.White
         ),
         onClick = {
@@ -192,7 +192,6 @@ fun CurrencyButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            //Image(painter = painterResource(id = ), contentDescription = null)
             Text(
                 text = currency.name,
                 fontSize = 30.sp,
@@ -203,7 +202,7 @@ fun CurrencyButton(
 
 @Composable
 fun CurrencyButtonRow(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     currencies: List<Currency>
 ) {
     Row(
@@ -213,16 +212,16 @@ fun CurrencyButtonRow(
         Spacer(Modifier.width(32.dp))
         CurrencyButton(
             modifier = Modifier
-                .testTag(EUR.name)
+                .testTag(currencies.first().name)
                 .weight(6f),
-            currency = EUR
+            currency = currencies.first()
         )
         Spacer(modifier = Modifier.weight(1f))
         CurrencyButton(
             modifier = Modifier
-                .testTag(USD.name)
+                .testTag(currencies[1].name)
                 .weight(6f),
-            currency = USD
+            currency = currencies[1]
         )
         Spacer(Modifier.width(32.dp))
     }

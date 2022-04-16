@@ -34,6 +34,24 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
                         )
                     )
                 }
+                is MainActivityUserIntent.SelectCurrency -> {
+                    setState(
+                        oldState.copy(
+                            mainScreenInfo = MainScreenInfo(
+                                selectedCurrency = userIntent.currency
+                            )
+                        )
+                    )
+                }
+                is MainActivityUserIntent.SelectOrder -> {
+                    setState(
+                        oldState.copy(
+                            mainScreenInfo = MainScreenInfo(
+                                selectedOrder = userIntent.orderCode
+                            )
+                        )
+                    )
+                }
             }
         }
     }
@@ -41,7 +59,7 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
 
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
-    class SelectOrder(val code: String) : MainActivityUserIntent()
+    class SelectOrder(val orderCode: String) : MainActivityUserIntent()
     class SelectCurrency(val currency: Currency) : MainActivityUserIntent()
 
     suspend fun setStateCache() {
