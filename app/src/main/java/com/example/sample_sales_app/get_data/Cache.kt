@@ -5,10 +5,10 @@ import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.utils.deserialize
-import com.example.sample_sales_app.utils.factorial
 import com.example.sample_sales_app.utils.hasChange
 import com.example.sample_sales_app.utils.hasInverseChange
 import com.example.sample_sales_app.view_model.MainViewModel
+import timber.log.Timber
 
 object Cache {
     /**
@@ -31,10 +31,10 @@ object Cache {
         return if (currenciesRequest.isSuccess() && ordersRequest.isSuccess()) {
             val currenciesData: List<CurrencyChange> = currenciesRequest.message.deserialize()
             val ordersData: List<Order> = ordersRequest.message.deserialize()
-            //val completeCurrencyChanges = getAllCurrencyChanges(currenciesData)
+            val completeCurrencyChanges = getAllCurrencyChanges(currenciesData)
 
             CacheData(
-                currenciesData,
+                completeCurrencyChanges,
                 ordersData
             )
         } else CacheData()
@@ -50,7 +50,7 @@ object Cache {
             usedCurrencies.add(from)
             currencies.removeAll(usedCurrencies)
             for (to in currencies)
-                if (!result.hasChange(from.name, to.name) || !result.hasInverseChange(from.name, to.name))
+                if (!currenciesData.hasChange(from.name, to.name) || !currenciesData.hasInverseChange(from.name, to.name))
                     result.add(getCurrencyChangeFor(from, to, result))
         }
         return result.toList()
@@ -61,25 +61,99 @@ object Cache {
         to: Currency,
         currencyChanges: MutableList<CurrencyChange>
     ): CurrencyChange {
-        var _rate: Double? = null
-        val fromMatches = currencyChanges.filter { it.from == from.name }
-        val toMatches = currencyChanges.filter { it.to == to.name }
-
-        fromMatches.forEach { fromMatch ->
-            toMatches.find { toMatch -> fromMatch.to == toMatch.from }?.let { toMatch ->
-                _rate = fromMatch.rate.toDouble() * toMatch.rate.toDouble()
-            }
-        }
-
-        val rate = _rate ?: throw(Exception("Undefined operation"))
+        val rate = rateCalculator(from.name, to.name, currencyChanges)
         return CurrencyChange(
             from.name,
             to.name,
-            rate.toString()
+            rate
         )
     }
 
-    private fun totalPossiblePairCombinations(sampleSize: Int): Int {
-        return sampleSize.factorial() / (2 * (sampleSize - 2).factorial())
+    private fun rateCalculator(
+        from: String,
+        to: String,
+        currencyChanges: MutableList<CurrencyChange>
+    ): String {
+        var rate = ""
+
+        // Check if the rate can be obtained by direct multiplication
+        var fromMatches = currencyChanges.filter { it.from == from }
+        var toMatches = currencyChanges.filter { it.to == to }
+        rate = calculateRateOneMissingStep(fromMatches, toMatches)
+        if (rate.isNotEmpty()) return rate
+
+        // Check if the rate can be obtained by inverting one change
+        fromMatches = currencyChanges.filter { it.to == from }
+        rate = calculateRateOneMissingStep(
+            fromMatches,
+            toMatches,
+            ConversionCase.INVERSE_FROM
+        )
+        if (rate.isNotEmpty()) return rate
+
+        // Check if the rate can be obtained by inverting the other
+        fromMatches = currencyChanges.filter { it.from == from }
+        toMatches = currencyChanges.filter { it.from == to }
+        rate = calculateRateOneMissingStep(
+            fromMatches,
+            toMatches,
+            ConversionCase.INVERSE_TO
+        )
+        if (rate.isNotEmpty()) return rate
+
+        // Check if the rate can be obtained by inverting both
+        fromMatches = currencyChanges.filter { it.to == from }
+        toMatches = currencyChanges.filter { it.from == to }
+        rate = calculateRateOneMissingStep(
+            fromMatches,
+            toMatches,
+            ConversionCase.INVERSE
+        )
+        return rate.ifEmpty { "Unable to get money conversion" }
     }
+
+    private fun calculateRateOneMissingStep(
+        fromMatches: List<CurrencyChange>,
+        toMatches: List<CurrencyChange>,
+        conversionCase: ConversionCase = ConversionCase.DIRECT
+    ): String {
+        var rate: Double? = null
+        if (fromMatches.isEmpty() || toMatches.isEmpty()) {
+            Timber.e(
+                "Empty match list:\n FromMatches: $fromMatches\nToMatches: $toMatches"
+            )
+            return ""
+        }
+
+        fromMatches.forEach { fromMatch ->
+            when (conversionCase) {
+                ConversionCase.DIRECT -> toMatches.find { toMatch -> fromMatch.to == toMatch.from }
+                    ?.let { toMatch ->
+                        rate = fromMatch.rate.toDouble() * toMatch.rate.toDouble()
+                        return@forEach
+                    }
+                ConversionCase.INVERSE_TO -> toMatches.find { toMatch -> fromMatch.to == toMatch.to }
+                    ?.let { toMatch ->
+                        rate = fromMatch.rate.toDouble() * (1 / toMatch.rate.toDouble())
+                        return@forEach
+                    }
+                ConversionCase.INVERSE_FROM -> toMatches.find { toMatch -> fromMatch.from == toMatch.from }
+                    ?.let { toMatch ->
+                        rate = (1 / fromMatch.rate.toDouble()) * toMatch.rate.toDouble()
+                        return@forEach
+                    }
+                ConversionCase.INVERSE -> toMatches.find { toMatch -> fromMatch.from == toMatch.to }
+                    ?.let { toMatch ->
+                        rate = (1 / fromMatch.rate.toDouble()) * (1 / toMatch.rate.toDouble())
+                        return@forEach
+                    }
+            }
+        }
+        return rate.toString()
+            .ifEmpty { throw(Exception("Null rate for Conversion: ${conversionCase.name}")) }
+    }
+}
+
+private enum class ConversionCase {
+    DIRECT, INVERSE_FROM, INVERSE_TO, INVERSE
 }

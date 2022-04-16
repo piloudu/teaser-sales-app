@@ -42,13 +42,3 @@ fun List<CurrencyChange>.hasInverseChange(from: String, to: String): Boolean {
         true
     } ?: false
 }
-
-fun Int.factorial(): Int {
-    var result = 0
-    if (this == 0) return 1
-    for (i in 0 until this - 1) {
-        if (i == 0) result = this
-        else result *= this - i
-    }
-    return result
-}
