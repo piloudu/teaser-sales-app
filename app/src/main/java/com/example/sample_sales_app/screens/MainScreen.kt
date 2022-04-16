@@ -55,37 +55,40 @@ fun DropdownPanel(
     var orderCode: String by remember { mutableStateOf("Select an order") }
     var expanded: Boolean by remember { mutableStateOf(false) }
 
-    Row(
-        modifier
-            .fillMaxWidth()
-            .clickable {
-                expanded = !expanded
-            },
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(text = orderCode)
-        Icon(imageVector = Icons.Filled.ArrowDropDown, null)
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+    Box {
+        Row(
+            modifier
+                .fillMaxWidth()
+                .clickable {
+                    expanded = !expanded
+                },
+            horizontalArrangement = Arrangement.Center
         ) {
-            orderCodes.forEach { order ->
-                val isSelected = orderCode == order
-                val style = if (isSelected)
-                    MaterialTheme.typography.body1.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Red
+            Text(text = orderCode)
+            Icon(imageVector = Icons.Filled.ArrowDropDown, null)
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.height(200.dp)
+            ) {
+                orderCodes.forEach { order ->
+                    val isSelected = orderCode == order
+                    val style = if (isSelected)
+                        MaterialTheme.typography.body1.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Red
+                        )
+                    else MaterialTheme.typography.body1.copy(
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black
                     )
-                else MaterialTheme.typography.body1.copy(
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
-                )
 
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    orderCode = order
-                }) {
-                    Text(order, style = style)
+                    DropdownMenuItem(onClick = {
+                        expanded = false
+                        orderCode = order
+                    }) {
+                        Text(order, style = style)
+                    }
                 }
             }
         }

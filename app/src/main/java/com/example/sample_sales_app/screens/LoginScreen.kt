@@ -33,8 +33,8 @@ fun LoginScreen(modifier: Modifier) {
     Box(modifier = modifier
         .testTag(LoginScreenTags.LOGIN_SCREEN.name)
         .clickable {
-        MainViewModel.sendIntent(MainActivityUserIntent.Login)
-    }) {
+            MainViewModel.sendIntent(MainActivityUserIntent.Login)
+        }) {
         Column(
             modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -63,9 +63,10 @@ fun LoginScreen(modifier: Modifier) {
                     .weight(2f)
             )
             Spacer(Modifier.height(16.dp))
-            ArrowsBlock(modifier = Modifier
-                .testTag(LoginScreenTags.ARROWS.name)
-                .weight(5f)
+            ArrowsBlock(
+                modifier = Modifier
+                    .testTag(LoginScreenTags.ARROWS.name)
+                    .weight(5f)
             )
             Spacer(Modifier.height(72.dp))
         }

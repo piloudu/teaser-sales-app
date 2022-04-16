@@ -12,7 +12,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 internal val mapper = jacksonObjectMapper()
 internal inline fun <reified T> String.deserialize(): List<T> = mapper.readValue(
     this,
-    object: TypeReference<List<T>>() {}
+    object : TypeReference<List<T>>() {}
 )
 
 fun toastMessage(message: String) {
@@ -26,12 +26,14 @@ suspend infix fun Currency.changeToOrEmpty(currency: Currency): String {
     val currencyChanges = Cache.get().currencyChanges
     var rate = ""
     currencyChanges.find { it.from == this.name && it.to == currency.name }?.takeIf {
-        it.rate.isNotEmpty() }?.let {
+        it.rate.isNotEmpty()
+    }?.let {
         return it.rate
     }
     currencyChanges.find { it.from == currency.name && it.to == this.name }?.takeIf {
-        it.rate.isNotEmpty() }?.let {
-        rate = (1/it.rate.toDouble()).toString()
+        it.rate.isNotEmpty()
+    }?.let {
+        rate = (1 / it.rate.toDouble()).toString()
     }
     return rate
 }

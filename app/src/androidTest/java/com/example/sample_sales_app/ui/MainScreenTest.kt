@@ -40,7 +40,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_dropdown_instructions_message() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.DROPDOWN_INSTRUCTIONS .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.DROPDOWN_INSTRUCTIONS.name, true).assertIsDisplayed()
         }
     }
 
@@ -48,7 +48,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_dropdown_panel() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.DROPDOWN .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.DROPDOWN.name, true).assertIsDisplayed()
         }
     }
 
@@ -56,7 +56,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_currency_instructions_message() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.CURRENCY_INSTRUCTIONS .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.CURRENCY_INSTRUCTIONS.name, true).assertIsDisplayed()
         }
     }
 
@@ -65,7 +65,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_EUR_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.EUR .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.EUR.name, true).assertIsDisplayed()
         }
     }
 
@@ -73,7 +73,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_USD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.USD .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.USD.name, true).assertIsDisplayed()
         }
     }
 
@@ -81,7 +81,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_CAD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.CAD .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.CAD.name, true).assertIsDisplayed()
         }
     }
 
@@ -89,7 +89,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_AUD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.AUD .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.AUD.name, true).assertIsDisplayed()
         }
     }
 
@@ -97,7 +97,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_result_element() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.RESULT .name, true).assertIsDisplayed()
+            onNodeWithTag(MainScreenTags.RESULT.name, true).assertIsDisplayed()
         }
     }
 }
