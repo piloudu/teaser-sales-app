@@ -25,7 +25,7 @@ fun MainActivityScreen(
     ) {
         when (state.innerState) {
             AppState.LOGIN -> LoginScreen(modifier)
-            AppState.MAIN -> MainScreen(modifier, state)
+            AppState.MAIN -> MainScreen(modifier)
         }
     }
 }

@@ -29,7 +29,7 @@ class MainScreenTest {
             val state by MainViewModel.state.collectAsState()
             SampleSalesAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    MainScreen(Modifier.fillMaxSize(), state)
+                    MainScreen(Modifier.fillMaxSize())
                 }
             }
         }
