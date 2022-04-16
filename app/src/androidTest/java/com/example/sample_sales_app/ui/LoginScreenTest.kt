@@ -8,8 +8,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import com.example.sample_sales_app.screens.LoginScreen
 import com.example.sample_sales_app.screens.LoginScreenTags
-import com.example.sample_sales_app.screens.MainScreen
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
 import org.junit.Rule
 import org.junit.jupiter.api.DisplayName
@@ -27,7 +27,7 @@ class LoginScreenTest {
         composeTestRule.setContent {
             SampleSalesAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    MainScreen(modifier = Modifier.fillMaxSize())
+                    LoginScreen(modifier = Modifier.fillMaxSize())
                 }
             }
         }
