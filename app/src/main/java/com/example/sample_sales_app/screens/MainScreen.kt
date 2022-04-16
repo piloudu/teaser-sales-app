@@ -11,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sample_sales_app.ui.theme.Black
@@ -30,12 +33,6 @@ enum class MainScreenMessages(val message: String) {
     DROPDOWN_INITIAL("Select an order")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    MainScreen(modifier = Modifier.fillMaxSize())
-}
-
 @Composable
 fun MainScreen(
     modifier: Modifier
@@ -49,7 +46,7 @@ fun MainScreen(
         DropdownPanel(
             modifier = Modifier
                 .testTag(MainScreenTags.DROPDOWN.name)
-                .weight(2f)
+                .weight(5f)
         )
     }
 }
@@ -78,6 +75,7 @@ fun DropdownPanel(
     val orderCodes = state.cache.orders.map { it.sku }.distinct()
     var orderCode: String by remember { mutableStateOf(MainScreenMessages.DROPDOWN_INITIAL.message) }
     var expanded: Boolean by remember { mutableStateOf(false) }
+    val configuration = LocalConfiguration.current
 
     Box(modifier) {
         Row(
@@ -87,20 +85,29 @@ fun DropdownPanel(
                 },
             horizontalArrangement = Arrangement.Center
         ) {
+            val fontSize = 30.sp
             if (orderCode == MainScreenMessages.DROPDOWN_INITIAL.message) {
                 Text(
                     text = orderCode,
+                    fontSize = fontSize,
                     color = Color.Gray,
                     modifier = Modifier.alpha(0.7f)
                 )
             } else Text(
-                orderCode
+                orderCode,
+                fontSize = fontSize
             )
-            Icon(imageVector = Icons.Filled.ArrowDropDown, null)
+            Icon(
+                modifier = Modifier.size(40.dp),
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = null
+            )
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.height(300.dp)
+                modifier = Modifier
+                    .width((configuration.screenWidthDp.dp / 2))
+                    .height(300.dp)
             ) {
                 orderCodes.forEach { order ->
                     val isSelected = orderCode == order
@@ -114,14 +121,25 @@ fun DropdownPanel(
                         color = Color.Black
                     )
 
-                    DropdownMenuItem(onClick = {
-                        expanded = false
-                        orderCode = order
-                    }) {
-                        Text(order, style = style)
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            orderCode = order
+                        }) {
+                        Text(
+                            order,
+                            style = style,
+                            fontSize = 15.sp
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    MainScreen(modifier = Modifier.fillMaxSize())
 }
