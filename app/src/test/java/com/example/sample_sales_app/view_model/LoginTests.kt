@@ -4,6 +4,7 @@ import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.get_data.*
+import com.example.sample_sales_app.utils.deserialize
 import com.example.sample_sales_app.utils.mapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
