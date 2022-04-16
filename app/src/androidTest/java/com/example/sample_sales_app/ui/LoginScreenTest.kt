@@ -6,26 +6,28 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import org.junit.Rule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import com.example.sample_sales_app.screens.LoginScreen
 import com.example.sample_sales_app.screens.LoginScreenTags
+import com.example.sample_sales_app.screens.MainScreen
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
+import org.junit.Rule
 import org.junit.jupiter.api.DisplayName
 import org.junit.Test
 
 @DisplayName("LoginScreen")
 class LoginScreenTest {
 
-   @get:Rule
-   val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
 
-    private fun withLoginScreenContentSetter(test: ComposeContentTestRule.() -> Unit) {
+    private fun withLoginScreenContentSetter(
+        test: ComposeContentTestRule.() -> Unit
+    ) {
         composeTestRule.setContent {
             SampleSalesAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    LoginScreen(Modifier.fillMaxSize())
+                    MainScreen(modifier = Modifier.fillMaxSize())
                 }
             }
         }

@@ -35,18 +35,3 @@ fun MainActivityScreen(
         }
     }
 }
-
-@Composable
-fun MainScreen(modifier: Modifier) {
-    Text(
-        textAlign = TextAlign.Center,
-        color = Color.Cyan,
-        fontSize = 30.sp,
-        text = "You are now in the Main Screen",
-        modifier = modifier
-            .wrapContentHeight()
-            .clickable {
-                MainViewModel.sendIntent(MainActivityUserIntent.Login)
-            }
-    )
-}
