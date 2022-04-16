@@ -31,10 +31,10 @@ object Cache {
         return if (currenciesRequest.isSuccess() && ordersRequest.isSuccess()) {
             val currenciesData: List<CurrencyChange> = currenciesRequest.message.deserialize()
             val ordersData: List<Order> = ordersRequest.message.deserialize()
-            val completeCurrencyChanges = getAllCurrencyChanges(currenciesData)
+            //val completeCurrencyChanges = getAllCurrencyChanges(currenciesData)
 
             CacheData(
-                completeCurrencyChanges,
+                currenciesData,
                 ordersData
             )
         } else CacheData()

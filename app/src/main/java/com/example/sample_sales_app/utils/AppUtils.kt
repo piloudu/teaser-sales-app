@@ -5,17 +5,21 @@ import com.example.sample_sales_app.MainActivity
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.get_data.Cache
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 
 internal val mapper = jacksonObjectMapper()
-internal fun <T> String.deserialize(): List<T> = mapper.readValue(this)
+internal inline fun <reified T> String.deserialize(): List<T> = mapper.readValue(
+    this,
+    object: TypeReference<List<T>>() {}
+)
 
 fun toastMessage(message: String) {
     Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
 }
 
-suspend infix fun Currency.to(currency: Currency): String {
+suspend infix fun Currency.changeTo(currency: Currency): String {
     val currencyChanges = Cache.get().currencyChanges
     var rate = ""
     currencyChanges.find { it.from == this.name && it.to == currency.name }?.let {
