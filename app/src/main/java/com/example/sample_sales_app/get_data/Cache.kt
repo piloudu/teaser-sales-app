@@ -109,7 +109,7 @@ object Cache {
             toMatches,
             ConversionCase.INVERSE
         )
-        return rate.ifEmpty { "Unable to get money conversion" }
+        return rate//.ifEmpty { "Unable to get money conversion" }
     }
 
     private fun calculateRateOneMissingStep(

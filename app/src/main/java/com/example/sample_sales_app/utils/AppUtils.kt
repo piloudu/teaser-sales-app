@@ -19,13 +19,18 @@ fun toastMessage(message: String) {
     Toast.makeText(MainActivity.getContext(), message, Toast.LENGTH_SHORT).show()
 }
 
-suspend infix fun Currency.changeTo(currency: Currency): String {
+/**
+ * Get the conversion between two currencies or an empty string if it couldn't be calculated
+ */
+suspend infix fun Currency.changeToOrEmpty(currency: Currency): String {
     val currencyChanges = Cache.get().currencyChanges
     var rate = ""
-    currencyChanges.find { it.from == this.name && it.to == currency.name }?.let {
+    currencyChanges.find { it.from == this.name && it.to == currency.name }?.takeIf {
+        it.rate.isNotEmpty() }?.let {
         return it.rate
     }
-    currencyChanges.find { it.from == currency.name && it.to == this.name }?.let {
+    currencyChanges.find { it.from == currency.name && it.to == this.name }?.takeIf {
+        it.rate.isNotEmpty() }?.let {
         rate = (1/it.rate.toDouble()).toString()
     }
     return rate
