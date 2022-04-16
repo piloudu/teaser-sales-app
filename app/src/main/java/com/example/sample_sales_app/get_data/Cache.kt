@@ -51,7 +51,7 @@ object Cache {
             currencies.removeAll(usedCurrencies)
             for (to in currencies)
                 if (!currenciesData.hasChange(from.name, to.name) || !currenciesData.hasInverseChange(from.name, to.name))
-                    result.add(getCurrencyChangeFor(from, to, result))
+                    result.add(getCurrencyChangeFor(from, to, currenciesData))
         }
         return result.toList()
     }
@@ -59,7 +59,7 @@ object Cache {
     private fun getCurrencyChangeFor(
         from: Currency,
         to: Currency,
-        currencyChanges: MutableList<CurrencyChange>
+        currencyChanges: List<CurrencyChange>
     ): CurrencyChange {
         val rate = rateCalculator(from.name, to.name, currencyChanges)
         return CurrencyChange(
@@ -72,7 +72,7 @@ object Cache {
     private fun rateCalculator(
         from: String,
         to: String,
-        currencyChanges: MutableList<CurrencyChange>
+        currencyChanges: List<CurrencyChange>
     ): String {
         var rate = ""
 
@@ -149,8 +149,8 @@ object Cache {
                     }
             }
         }
-        return rate.toString()
-            .ifEmpty { throw(Exception("Null rate for Conversion: ${conversionCase.name}")) }
+        return rate?.toString()
+            ?: "" //throw(Exception("Null rate for Conversion: ${conversionCase.name}"))
     }
 }
 
