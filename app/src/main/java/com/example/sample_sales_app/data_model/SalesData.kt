@@ -1,5 +1,8 @@
 package com.example.sample_sales_app.data_model
 
+enum class Currency {
+    EUR, USD, AUD, CAD
+}
 
 data class CurrencyChange(
     val from: String,

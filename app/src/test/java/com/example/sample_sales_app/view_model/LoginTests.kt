@@ -9,26 +9,15 @@ import com.example.sample_sales_app.utils.mapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.*
 
 class LoginTests {
     private lateinit var result: RestResult
-    private val dispatcher = TestCoroutineDispatcher()
-
-    private fun withLoginScope(scope: suspend CoroutineScope.() -> Unit) {
-        runBlocking {
-            Dispatchers.setMain(dispatcher)
-            scope()
-        }
-    }
 
     @DisplayName("Should retrieve currency JSON")
     @Test
     fun `is REST call result for currencyRequest a success`() {
-        withLoginScope {
+        withTestScope {
             result = RestCall.restCallFor(HttpUrls.CURRENCIES_URL)
             println(result.message)
             result.status shouldBe RestCall.RestStatus.SUCCESS
@@ -38,7 +27,7 @@ class LoginTests {
     @DisplayName("Should retrieve orders JSON")
     @Test
     fun `is REST call result for ordersRequest a success`() {
-        withLoginScope {
+        withTestScope {
             result = RestCall.restCallFor(HttpUrls.ORDERS_URL)
             result.status shouldBe RestCall.RestStatus.SUCCESS
         }
@@ -52,7 +41,7 @@ class LoginTests {
 
         @BeforeAll
         fun init() {
-            withLoginScope {
+            withTestScope {
                 result = RestCall.restCallFor(HttpUrls.CURRENCIES_URL)
             }
         }
@@ -89,7 +78,7 @@ class LoginTests {
         @DisplayName("is Cache created properly")
         @Test
         fun `is Cache created properly`() {
-            withLoginScope {
+            withTestScope {
                 val cache = Cache.get()
                 cache.shouldBeInstanceOf<CacheData>()
             }
@@ -98,7 +87,7 @@ class LoginTests {
         @DisplayName("is Cache always the same object")
         @Test
         fun `is Cache always the same object`() {
-            withLoginScope {
+            withTestScope {
                 val cache = MainViewModel.state.value.cache
                 val cache1 = MainViewModel.state.value.cache
                 cache.hashCode() shouldBe cache1.hashCode()

@@ -1,12 +1,10 @@
 package com.example.sample_sales_app.view_model
 
-import androidx.lifecycle.viewModelScope
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.get_data.Cache
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.launch
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -17,7 +15,7 @@ class CurrencyChangeTest {
 
     @BeforeEach
     fun getData() {
-        MainViewModel.viewModelScope.launch {
+        withTestScope {
             cache = Cache.get()
             currencyChangeList = cache.currencyChanges
         }
