@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,39 +33,56 @@ enum class MainScreenTags {
 
 enum class MainScreenMessages(val message: String) {
     HEADER("Sample Sales App"),
-    DROPDOWN_INITIAL("Select an order")
+    DROPDOWN_INITIAL("Select an order"),
+    RESULT("Total amount: ")
+}
+
+@Composable
+fun isVertical(): Boolean {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    return screenHeight > screenWidth
 }
 
 @Composable
 fun MainScreen(
     modifier: Modifier
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TopBar(modifier = Modifier.height(32.dp))
-        Spacer(Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
         DropdownPanel(
             modifier = Modifier
                 .testTag(MainScreenTags.DROPDOWN.name)
                 .weight(2f)
         )
-        Spacer(Modifier.weight(1f))
-        if (screenHeight > screenWidth) {
-            Column(Modifier.weight(3f)) {
+        if (isVertical()) Spacer(modifier = Modifier.weight(1f))
+        if (isVertical()) {
+            Column(Modifier.weight(5f)) {
                 CurrencyButtonRow(currencies = listOf(EUR, USD))
                 Spacer(Modifier.weight(1f))
                 CurrencyButtonRow(currencies = listOf(CAD, AUD))
-                Spacer(Modifier.weight(2f))
             }
         } else Row(Modifier) {
-            CurrencyButtonRow(modifier = Modifier.weight(3f), currencies = listOf(EUR, USD))
-            CurrencyButtonRow(modifier = Modifier.weight(3f), currencies = listOf(CAD, AUD))
+            CurrencyButtonRow(
+                modifier = Modifier.weight(3f), currencies = listOf(
+                    EUR, USD, CAD, AUD
+                )
+            )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .testTag(MainScreenTags.RESULT.name),
+            text = MainScreenMessages.RESULT.message + "32,28",
+            fontSize = 30.sp
+        )
+        if (isVertical()) Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -168,7 +186,7 @@ fun CurrencyButton(
 
     val backgroundColor = if (selected) Color.Blue else Color.LightGray
 
-    val buttonSize = if (screenHeight > screenWidth) screenHeight / 6
+    val buttonSize = if (isVertical()) screenHeight / 6
     else screenWidth / 6
 
     OutlinedButton(
@@ -209,25 +227,22 @@ fun CurrencyButtonRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center
     ) {
-        Spacer(Modifier.width(32.dp))
-        CurrencyButton(
-            modifier = Modifier
-                .testTag(currencies.first().name)
-                .weight(6f),
-            currency = currencies.first()
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        CurrencyButton(
-            modifier = Modifier
-                .testTag(currencies[1].name)
-                .weight(6f),
-            currency = currencies[1]
-        )
-        Spacer(Modifier.width(32.dp))
+        for ((index, currency) in currencies.withIndex()) {
+            if (index == 0) Spacer(Modifier.width(32.dp))
+            CurrencyButton(
+                modifier = Modifier
+                    .testTag(currency.name)
+                    .weight(6f),
+                currency = currency
+            )
+            if (index != currencies.size - 1) Spacer(Modifier.weight(1f))
+            if (index == currencies.size - 1) Spacer(Modifier.width(32.dp))
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
+@Preview(showBackground = true, device = Devices.AUTOMOTIVE_1024p, widthDp = 1080, heightDp = 720)
 @Composable
 fun MainScreenPreview() {
     MainScreen(modifier = Modifier.fillMaxSize())
