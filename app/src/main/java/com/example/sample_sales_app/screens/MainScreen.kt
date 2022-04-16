@@ -3,7 +3,9 @@ package com.example.sample_sales_app.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults.outlinedButtonColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
@@ -11,21 +13,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sample_sales_app.ui.theme.Black
+import com.example.sample_sales_app.data_model.Currency
+import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.ui.theme.Purple700
 import com.example.sample_sales_app.ui.theme.White
+import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
 enum class MainScreenTags {
-    DROPDOWN_INSTRUCTIONS, DROPDOWN, CURRENCY_INSTRUCTIONS, EUR, AUD, USD, CAD, RESULT
+    DROPDOWN_INSTRUCTIONS, DROPDOWN, CURRENCY_INSTRUCTIONS, RESULT
 }
 
 enum class MainScreenMessages(val message: String) {
@@ -37,6 +39,9 @@ enum class MainScreenMessages(val message: String) {
 fun MainScreen(
     modifier: Modifier
 ) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,8 +51,20 @@ fun MainScreen(
         DropdownPanel(
             modifier = Modifier
                 .testTag(MainScreenTags.DROPDOWN.name)
-                .weight(5f)
+                .weight(2f)
         )
+        Spacer(Modifier.weight(1f))
+        if (screenHeight > screenWidth) {
+            Column(Modifier.weight(3f)) {
+                CurrencyButtonRow(modifier = Modifier, currencies = listOf(EUR, USD))
+                Spacer(Modifier.weight(1f))
+                CurrencyButtonRow(modifier = Modifier, currencies = listOf(CAD, AUD))
+                Spacer(Modifier.weight(2f))
+            }
+        } else Row(Modifier) {
+            CurrencyButtonRow(modifier = Modifier.weight(3f), currencies = listOf(EUR, USD))
+            CurrencyButtonRow(modifier = Modifier.weight(3f), currencies = listOf(CAD, AUD))
+        }
     }
 }
 
@@ -135,6 +152,79 @@ fun DropdownPanel(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CurrencyButton(
+    modifier: Modifier,
+    currency: Currency,
+    //resImage: Int,
+) {
+    val state by MainViewModel.state.collectAsState()
+    var selected = state.mainScreenInfo.selectedCurrency == currency
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    val backgroundColor = if (selected) Color.Blue else Color.Gray
+
+    val buttonSize = if (screenHeight > screenWidth) screenHeight / 6
+    else screenWidth / 6
+
+    OutlinedButton(
+        modifier = Modifier
+            .height(buttonSize)
+            .width(buttonSize)
+            .clickable {
+            },
+        shape = RoundedCornerShape(15),
+        colors = outlinedButtonColors(
+            backgroundColor = Color.LightGray,
+            contentColor = Color.White
+        ),
+        onClick = {
+            selected = !selected
+            MainViewModel.sendIntent(MainActivityUserIntent.SelectCurrency(currency))
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            //Image(painter = painterResource(id = ), contentDescription = null)
+            Text(
+                text = currency.name,
+                fontSize = 30.sp,
+            )
+        }
+    }
+}
+
+@Composable
+fun CurrencyButtonRow(
+    modifier: Modifier,
+    currencies: List<Currency>
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Spacer(Modifier.width(32.dp))
+        CurrencyButton(
+            modifier = Modifier
+                .testTag(EUR.name)
+                .weight(6f),
+            currency = EUR
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        CurrencyButton(
+            modifier = Modifier
+                .testTag(USD.name)
+                .weight(6f),
+            currency = USD
+        )
+        Spacer(Modifier.width(32.dp))
     }
 }
 

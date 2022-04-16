@@ -10,6 +10,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.screens.MainScreen
 import com.example.sample_sales_app.screens.MainScreenTags
 import com.example.sample_sales_app.ui.theme.SampleSalesAppTheme
@@ -65,7 +66,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_EUR_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.EUR.name, true).assertIsDisplayed()
+            onNodeWithTag(Currency.EUR.name, true).assertIsDisplayed()
         }
     }
 
@@ -73,7 +74,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_USD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.USD.name, true).assertIsDisplayed()
+            onNodeWithTag(Currency.USD.name, true).assertIsDisplayed()
         }
     }
 
@@ -81,7 +82,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_CAD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.CAD.name, true).assertIsDisplayed()
+            onNodeWithTag(Currency.CAD.name, true).assertIsDisplayed()
         }
     }
 
@@ -89,7 +90,7 @@ class MainScreenTest {
     @Test
     fun main_screen_displays_AUD_button() {
         withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.AUD.name, true).assertIsDisplayed()
+            onNodeWithTag(Currency.AUD.name, true).assertIsDisplayed()
         }
     }
 

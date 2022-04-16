@@ -2,6 +2,7 @@ package com.example.sample_sales_app.view_model
 
 import androidx.lifecycle.viewModelScope
 import com.example.sample_sales_app.data_model.CacheData
+import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.get_data.Cache
 import com.example.sample_sales_app.utils.toastMessage
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
 
     fun sendIntent(userIntent: MainActivityUserIntent) {
         viewModelScope.launch(Dispatchers.Main) {
-            userIntent.setStateCache(reducer.state.value)
+            userIntent.setStateCache()
         }
         reducer.sendIntent(userIntent)
     }
@@ -40,8 +41,10 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
 
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
+    class SelectOrder(val code: String) : MainActivityUserIntent()
+    class SelectCurrency(val currency: Currency) : MainActivityUserIntent()
 
-    suspend fun setStateCache(state: MainActivityState) {
+    suspend fun setStateCache() {
         val oldCache = MainViewModel.state.value.cache
         MainViewModel.state.value.cache = Cache.get()
         if (oldCache != MainViewModel.state.value.cache)
@@ -51,17 +54,22 @@ sealed class MainActivityUserIntent : UserIntent {
 
 data class MainActivityState(
     val innerState: AppState,
-    val isLoading: Boolean,
-    var cache: CacheData
+    var cache: CacheData,
+    val mainScreenInfo: MainScreenInfo
 ) : UiState {
     companion object {
         fun initial() = MainActivityState(
-            isLoading = true,
             cache = CacheData(),
-            innerState = AppState.LOGIN
+            innerState = AppState.LOGIN,
+            mainScreenInfo = MainScreenInfo()
         )
     }
 }
+
+data class MainScreenInfo(
+    val selectedCurrency: Currency? = null,
+    val selectedOrder: String = ""
+)
 
 enum class AppState {
     LOGIN, MAIN
