@@ -19,7 +19,7 @@ abstract class Reducer<S : UiState, in I : UserIntent>(initialState: S) {
 }
 
 interface UserIntent {
-    fun action(): String = "Empty action"
+    suspend fun action(): String = "Empty action"
 }
 
 interface UiState

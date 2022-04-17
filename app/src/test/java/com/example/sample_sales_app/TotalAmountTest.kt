@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 class TotalAmountTest {
     private val orders: List<Order> = mockOrders.deserialize()
-    private val currencyChanges: List<CurrencyChange> = mockOrders.deserialize()
+    private val currencyChanges: List<CurrencyChange> = mockCurrencyChanges.deserialize()
 
     val cache = CacheData(
         orders = orders,

@@ -62,12 +62,18 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
     class SelectOrder(val orderCode: String) : MainActivityUserIntent() {
-        override fun action() = TotalAmount.getFor(orderCode = orderCode)
+        override suspend fun action() = TotalAmount.getFor(
+            orderCode = orderCode,
+            cache = Cache.get()
+        )
     }
 
 
     class SelectCurrency(val currency: Currency) : MainActivityUserIntent() {
-        override fun action() = TotalAmount.getFor(targetCurrency = currency)
+        override suspend fun action() = TotalAmount.getFor(
+            targetCurrency = currency,
+            cache = Cache.get()
+        )
     }
 
     suspend fun setStateCache() {

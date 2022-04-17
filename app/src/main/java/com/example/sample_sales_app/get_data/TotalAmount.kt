@@ -9,7 +9,9 @@ object TotalAmount {
         targetCurrency: Currency? = null,
         cache: CacheData
     ): String {
-        TODO("Not yet implemented")
+        if (orderCode == null || targetCurrency == null) return ""
+        if (cache.currencyChanges.isEmpty() || cache.orders.isEmpty()) return ""
+        return ""
     }
 
 }
