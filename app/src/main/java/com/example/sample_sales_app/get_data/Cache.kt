@@ -74,7 +74,7 @@ object Cache {
         to: Currency,
         currencyChanges: List<CurrencyChange>
     ): String {
-        var rate = ""
+        var rate: String
 
         // Check if the rate can be obtained by direct multiplication
         var fromMatches = currencyChanges.filter { it.from == from }

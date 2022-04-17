@@ -100,7 +100,7 @@ data class MainActivityState(
 
 data class MainScreenInfo(
     val selectedCurrency: Currency? = null,
-    val selectedOrder: String = ""
+    val selectedOrder: String? = null
 )
 
 enum class AppState {

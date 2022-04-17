@@ -26,14 +26,14 @@ object TotalAmount {
         val amountToCurrencyMap = matchingOrders.associate {
             it.currency to it.amount
         }
-        var totalAmount: Double = 0.0
+        var totalAmount = 0.0
         for ((currency, amount) in amountToCurrencyMap) {
             if (currency == targetCurrency) {
                 totalAmount += amount.toDouble()
                 continue
             }
             val currencyRateToTarget = cache.currencyChanges.getRate(currency, targetCurrency)
-            if (currencyRateToTarget.isEmpty()) continue
+            if (currencyRateToTarget.isEmpty() || currencyRateToTarget == "null") continue
             else totalAmount += currencyRateToTarget.toDouble() * amount.toDouble()
         }
         return formatTotalAmount(totalAmount)

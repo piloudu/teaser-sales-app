@@ -22,8 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.Currency.*
+import com.example.sample_sales_app.get_data.TotalAmount
 import com.example.sample_sales_app.ui.theme.Purple700
 import com.example.sample_sales_app.ui.theme.White
+import com.example.sample_sales_app.view_model.MainActivityState
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
@@ -48,6 +50,9 @@ fun isVertical(): Boolean {
 fun MainScreen(
     modifier: Modifier
 ) {
+    val state: MainActivityState by MainViewModel.state.collectAsState()
+    val currency = state.mainScreenInfo.selectedCurrency
+    val orderCode = state.mainScreenInfo.selectedOrder
 
     Column(
         modifier,
@@ -82,7 +87,11 @@ fun MainScreen(
             modifier = Modifier
                 .weight(1f)
                 .testTag(MainScreenTags.RESULT.name),
-            text = MainScreenMessages.RESULT.message + "32,28",
+            text = MainScreenMessages.RESULT.message + TotalAmount.getFor(
+                orderCode = orderCode,
+                targetCurrency = currency,
+                cache = state.cache
+            ),
             fontSize = 30.sp
         )
         if (isVertical()) Spacer(modifier = Modifier.weight(1f))
