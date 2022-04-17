@@ -85,7 +85,7 @@ class TotalAmountTest {
                 targetCurrency = EUR,
                 cache = cache
             )
-            result shouldBe "15,60"
+            result shouldBe "15,63"
         }
     }
 }

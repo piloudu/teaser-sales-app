@@ -49,3 +49,11 @@ fun List<CurrencyChange>.hasInverseChange(from: Currency, to: Currency): Boolean
         true
     } ?: false
 }
+
+fun List<CurrencyChange>.getRate(from: Currency, to: Currency): String {
+    val rate = if (this.hasChange(from, to)) this.find { it.from == from && it.to == to }?.rate
+    else this.find { it.from == from && it.to == to }?.rate?.takeIf { it.isNotEmpty() }?.let {
+        1 / it.toDouble()
+    }.toString()
+    return rate ?: ""
+}
