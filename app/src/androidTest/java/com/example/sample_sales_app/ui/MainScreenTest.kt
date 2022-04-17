@@ -27,7 +27,6 @@ class MainScreenTest {
 
     private fun withMainScreenContentSetter(test: ComposeContentTestRule.() -> Unit) {
         composeTestRule.setContent {
-            val state by MainViewModel.state.collectAsState()
             SampleSalesAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     MainScreen(Modifier.fillMaxSize())
@@ -37,14 +36,6 @@ class MainScreenTest {
         composeTestRule.test()
     }
 
-    @DisplayName("has dropdown instructions message")
-    @Test
-    fun main_screen_displays_dropdown_instructions_message() {
-        withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.DROPDOWN_INSTRUCTIONS.name, true).assertIsDisplayed()
-        }
-    }
-
     @DisplayName("has dropdown panel")
     @Test
     fun main_screen_displays_dropdown_panel() {
@@ -52,15 +43,6 @@ class MainScreenTest {
             onNodeWithTag(MainScreenTags.DROPDOWN.name, true).assertIsDisplayed()
         }
     }
-
-    @DisplayName("has currency instructions message")
-    @Test
-    fun main_screen_displays_currency_instructions_message() {
-        withMainScreenContentSetter {
-            onNodeWithTag(MainScreenTags.CURRENCY_INSTRUCTIONS.name, true).assertIsDisplayed()
-        }
-    }
-
 
     @DisplayName("has EUR button")
     @Test

@@ -28,7 +28,7 @@ import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
 enum class MainScreenTags {
-    DROPDOWN_INSTRUCTIONS, DROPDOWN, CURRENCY_INSTRUCTIONS, RESULT
+    TOPBAR, DROPDOWN, RESULT
 }
 
 enum class MainScreenMessages(val message: String) {
@@ -53,7 +53,11 @@ fun MainScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopBar(modifier = Modifier.height(32.dp))
+        TopBar(
+            modifier = Modifier
+                .height(32.dp)
+                .testTag(MainScreenTags.TOPBAR.name)
+        )
         Spacer(modifier = Modifier.weight(1f))
         DropdownPanel(
             modifier = Modifier
@@ -191,6 +195,7 @@ fun CurrencyButton(
 
     OutlinedButton(
         modifier = Modifier
+            .testTag(currency.name)
             .height(buttonSize)
             .width(buttonSize)
             .clickable {
