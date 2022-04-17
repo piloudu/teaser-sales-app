@@ -1,4 +1,4 @@
-package com.example.sample_sales_app.view_model
+package com.example.sample_sales_app
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

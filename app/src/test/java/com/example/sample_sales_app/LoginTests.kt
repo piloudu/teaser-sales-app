@@ -1,4 +1,4 @@
-package com.example.sample_sales_app.view_model
+package com.example.sample_sales_app
 
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.CurrencyChange
@@ -6,6 +6,7 @@ import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.get_data.*
 import com.example.sample_sales_app.utils.deserialize
 import com.example.sample_sales_app.utils.mapper
+import com.example.sample_sales_app.view_model.MainViewModel
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

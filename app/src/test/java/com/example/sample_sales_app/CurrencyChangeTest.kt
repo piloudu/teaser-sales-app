@@ -1,4 +1,4 @@
-package com.example.sample_sales_app.view_model
+package com.example.sample_sales_app
 
 import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.utils.changeToOrEmpty
