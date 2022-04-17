@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sample_sales_app.utils.APP_NAME
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
-import com.example.sample_sales_app.view_model.MainViewModel
+import com.example.sample_sales_app.view_model.MainViewModelInstance
 
 enum class LoginScreenTags {
     LOGIN_SCREEN, GREETING_MESSAGE, GREETING_EMOJI, LOGIN_INSTRUCTION, ARROWS
@@ -41,7 +41,7 @@ fun LoginScreen(modifier: Modifier) {
     Box(modifier = modifier
         .testTag(LoginScreenTags.LOGIN_SCREEN.name)
         .clickable {
-            MainViewModel.sendIntent(MainActivityUserIntent.Login)
+            MainViewModelInstance.sendIntent(MainActivityUserIntent.Login)
         }) {
         Column(
             modifier.fillMaxHeight(),

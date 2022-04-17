@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.sample_sales_app.view_model.AppState
-import com.example.sample_sales_app.view_model.MainViewModel
+import com.example.sample_sales_app.view_model.MainViewModelInstance
 
 val modifier = Modifier
     .fillMaxSize()
@@ -18,7 +18,7 @@ val modifier = Modifier
 @Composable
 fun MainActivityScreen(
 ) {
-    val state by MainViewModel.state.collectAsState()
+    val state by MainViewModelInstance.state.collectAsState()
 
     Box(
         modifier = modifier

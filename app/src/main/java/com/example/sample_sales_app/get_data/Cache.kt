@@ -7,7 +7,7 @@ import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.utils.deserialize
 import com.example.sample_sales_app.utils.hasChange
 import com.example.sample_sales_app.utils.hasInverseChange
-import com.example.sample_sales_app.view_model.MainViewModel
+import com.example.sample_sales_app.view_model.MainViewModelInstance
 import timber.log.Timber
 
 object Cache {
@@ -15,7 +15,7 @@ object Cache {
      * Perform REST call only if data is missing
      */
     suspend fun get(): CacheData {
-        val cache = MainViewModel.state.value.cache
+        val cache = MainViewModelInstance.state.value.cache
 
         return if (cache.currencyChanges.isEmpty() || cache.orders.isEmpty()) {
             getNewCache()

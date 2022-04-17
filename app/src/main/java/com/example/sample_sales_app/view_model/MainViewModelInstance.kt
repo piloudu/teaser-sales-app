@@ -10,10 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
-object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
-    private val initialState = MainActivityState.initial()
-    private val reducer = MainReducer(initialState)
+/**
+ * MainViewModel is not made a singleton in order for tests to be able to instance a new object
+ * for each case
+ */
+abstract class MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
+    private val reducer = MainReducer(MainActivityState.initial())
 
     override val state: StateFlow<MainActivityState> = reducer.state
 
@@ -24,8 +26,6 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
         }
         reducer.sendIntent(userIntent)
     }
-
-    fun resetState() = reducer.setState(initialState)
 
     private class MainReducer(initialState: MainActivityState) :
         Reducer<MainActivityState, MainActivityUserIntent>(initialState) {
@@ -62,6 +62,11 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
     }
 }
 
+/**
+ * Create a MainViewModel instance to be used in the whole app
+ */
+object MainViewModelInstance : MainViewModel()
+
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
     class SelectOrder(val orderCode: String) : MainActivityUserIntent() {
@@ -80,9 +85,9 @@ sealed class MainActivityUserIntent : UserIntent {
     }
 
     suspend fun setStateCache() {
-        val oldCache = MainViewModel.state.value.cache
-        MainViewModel.state.value.cache = Cache.get()
-        if (oldCache != MainViewModel.state.value.cache)
+        val oldCache = MainViewModelInstance.state.value.cache
+        MainViewModelInstance.state.value.cache = Cache.get()
+        if (oldCache != MainViewModelInstance.state.value.cache)
             toastMessage("Data cached")
     }
 }

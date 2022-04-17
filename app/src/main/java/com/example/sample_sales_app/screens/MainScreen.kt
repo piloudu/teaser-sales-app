@@ -28,7 +28,7 @@ import com.example.sample_sales_app.ui.theme.White
 import com.example.sample_sales_app.utils.APP_NAME
 import com.example.sample_sales_app.view_model.MainActivityState
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
-import com.example.sample_sales_app.view_model.MainViewModel
+import com.example.sample_sales_app.view_model.MainViewModelInstance
 
 enum class MainScreenTags {
     TOPBAR, DROPDOWN_PANEL, DROPDOWN_MENU, RESULT
@@ -51,7 +51,7 @@ fun isVertical(): Boolean {
 fun MainScreen(
     modifier: Modifier
 ) {
-    val state: MainActivityState by MainViewModel.state.collectAsState()
+    val state: MainActivityState by MainViewModelInstance.state.collectAsState()
     val currency = state.mainScreenInfo.selectedCurrency
     val orderCode = state.mainScreenInfo.selectedOrder
 
@@ -119,7 +119,7 @@ fun TopBar(modifier: Modifier) {
 fun DropdownPanel(
     modifier: Modifier
 ) {
-    val state by MainViewModel.state.collectAsState()
+    val state by MainViewModelInstance.state.collectAsState()
     val orderCodes = state.cache.orders.map { it.sku }.distinct()
     var orderCode: String by remember { mutableStateOf(MainScreenMessages.DROPDOWN_INITIAL.message) }
     var expanded: Boolean by remember { mutableStateOf(false) }
@@ -177,7 +177,7 @@ fun DropdownPanel(
                         onClick = {
                             expanded = false
                             orderCode = order
-                            MainViewModel.sendIntent(MainActivityUserIntent.SelectOrder(order))
+                            MainViewModelInstance.sendIntent(MainActivityUserIntent.SelectOrder(order))
                         }) {
                         Text(
                             order,
@@ -196,7 +196,7 @@ fun CurrencyButton(
     modifier: Modifier,
     currency: Currency,
 ) {
-    val state by MainViewModel.state.collectAsState()
+    val state by MainViewModelInstance.state.collectAsState()
     var selected = state.mainScreenInfo.selectedCurrency == currency
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -220,7 +220,7 @@ fun CurrencyButton(
         ),
         onClick = {
             selected = !selected
-            MainViewModel.sendIntent(MainActivityUserIntent.SelectCurrency(currency))
+            MainViewModelInstance.sendIntent(MainActivityUserIntent.SelectCurrency(currency))
         }
     ) {
         Column(

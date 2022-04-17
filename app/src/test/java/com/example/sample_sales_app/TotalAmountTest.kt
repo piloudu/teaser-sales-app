@@ -1,7 +1,7 @@
 package com.example.sample_sales_app
 
 import com.example.sample_sales_app.data_model.CacheData
-import com.example.sample_sales_app.data_model.Currency.*
+import com.example.sample_sales_app.data_model.Currency.EUR
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.get_data.TotalAmount

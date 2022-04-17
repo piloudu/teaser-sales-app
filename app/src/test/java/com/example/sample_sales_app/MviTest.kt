@@ -1,21 +1,23 @@
 package com.example.sample_sales_app
 
-import com.example.sample_sales_app.data_model.Currency.*
-import com.example.sample_sales_app.view_model.*
+import com.example.sample_sales_app.data_model.Currency.EUR
+import com.example.sample_sales_app.view_model.AppState
+import com.example.sample_sales_app.view_model.MainActivityState
 import com.example.sample_sales_app.view_model.MainActivityUserIntent.*
-import com.example.sample_sales_app.view_model.MainViewModel.state
+import com.example.sample_sales_app.view_model.MainScreenInfo
+import com.example.sample_sales_app.view_model.MainViewModel
 import io.kotest.matchers.equality.shouldBeEqualToComparingFields
-import org.junit.Rule
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("The MVI machine")
 class MviTest {
-
-    @AfterEach
-    fun `reset state`() {
-        MainViewModel.resetState()
+    private lateinit var MainViewModelTestInstance : MainViewModel
+    
+    @BeforeEach
+    fun init() {
+        MainViewModelTestInstance = object : MainViewModel() {}
     }
 
     @DisplayName("sets login state")
@@ -24,10 +26,10 @@ class MviTest {
         withTestScope {
             val loggedState = MainActivityState.initial().copy(
                 innerState = AppState.MAIN,
-                cache = state.value.cache
+                cache = MainViewModelTestInstance.state.value.cache
             )
-            MainViewModel.sendIntent(Login)
-            state.value shouldBeEqualToComparingFields loggedState
+            MainViewModelTestInstance.sendIntent(Login)
+            MainViewModelTestInstance.state.value shouldBeEqualToComparingFields loggedState
         }
     }
 
@@ -40,8 +42,8 @@ class MviTest {
                     selectedCurrency = EUR
                 )
             )
-            MainViewModel.sendIntent(SelectCurrency(EUR))
-            state.value shouldBeEqualToComparingFields selectedCurrencyState
+            MainViewModelTestInstance.sendIntent(SelectCurrency(EUR))
+            MainViewModelTestInstance.state.value shouldBeEqualToComparingFields selectedCurrencyState
         }
     }
 
@@ -54,8 +56,8 @@ class MviTest {
                     selectedOrder = "T2006"
                 )
             )
-            MainViewModel.sendIntent(SelectOrder("T2006"))
-            state.value shouldBeEqualToComparingFields selectedOrderState
+            MainViewModelTestInstance.sendIntent(SelectOrder("T2006"))
+            MainViewModelTestInstance.state.value shouldBeEqualToComparingFields selectedOrderState
         }
     }
 }

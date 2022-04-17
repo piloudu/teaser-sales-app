@@ -4,10 +4,13 @@ import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.data_model.Order
-import com.example.sample_sales_app.get_data.*
+import com.example.sample_sales_app.get_data.Cache
+import com.example.sample_sales_app.get_data.HttpUrls
+import com.example.sample_sales_app.get_data.RestCall
+import com.example.sample_sales_app.get_data.RestResult
 import com.example.sample_sales_app.utils.deserialize
 import com.example.sample_sales_app.utils.mapper
-import com.example.sample_sales_app.view_model.MainViewModel
+import com.example.sample_sales_app.view_model.MainViewModelInstance
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -64,7 +67,7 @@ class LoginTests {
 
         @DisplayName("all of them")
         @Test
-        fun `is currency JSON deserializer properly`() {
+        fun `is currency JSON deserialized properly`() {
             val currencyChanges: List<CurrencyChange> = result.message.deserialize()
             currencyChanges.size shouldBe 6
         }
@@ -106,8 +109,8 @@ class LoginTests {
         @Test
         fun `is Cache always the same object`() {
             withTestScope {
-                val cache = MainViewModel.state.value.cache
-                val cache1 = MainViewModel.state.value.cache
+                val cache = MainViewModelInstance.state.value.cache
+                val cache1 = MainViewModelInstance.state.value.cache
                 cache.hashCode() shouldBe cache1.hashCode()
             }
         }

@@ -9,7 +9,7 @@ import com.example.sample_sales_app.get_data.Cache
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
-val APP_NAME = MainActivity.getContext().resources.getString(R.string.app_name)
+const val APP_NAME = "Teaser Sales App"
 
 internal val mapper = jacksonObjectMapper()
 internal inline fun <reified T> String.deserialize(): List<T> = mapper.readValue(
