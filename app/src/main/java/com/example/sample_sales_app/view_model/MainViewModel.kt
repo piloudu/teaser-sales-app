@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 
 object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>() {
-    private val reducer = MainReducer(MainActivityState.initial())
+    private val initialState = MainActivityState.initial()
+    private val reducer = MainReducer(initialState)
 
     override val state: StateFlow<MainActivityState> = reducer.state
 
@@ -23,6 +24,8 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
         }
         reducer.sendIntent(userIntent)
     }
+
+    fun resetState() = reducer.setState(initialState)
 
     private class MainReducer(initialState: MainActivityState) :
         Reducer<MainActivityState, MainActivityUserIntent>(initialState) {
