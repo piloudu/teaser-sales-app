@@ -2,12 +2,14 @@ package com.example.sample_sales_app.utils
 
 import android.widget.Toast
 import com.example.sample_sales_app.MainActivity
+import com.example.sample_sales_app.R
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.get_data.Cache
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+
+val APP_NAME = MainActivity.getContext().resources.getString(R.string.app_name)
 
 internal val mapper = jacksonObjectMapper()
 internal inline fun <reified T> String.deserialize(): List<T> = mapper.readValue(

@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sample_sales_app.utils.APP_NAME
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
@@ -30,7 +31,7 @@ enum class LoginScreenTags {
 }
 
 enum class LoginScreenMessages(val message: String) {
-    GREETING("Welcome to Sample Sales Application!"),
+    GREETING("Welcome to $APP_NAME!"),
     INSTRUCTION("Click anywhere to start")
 }
 

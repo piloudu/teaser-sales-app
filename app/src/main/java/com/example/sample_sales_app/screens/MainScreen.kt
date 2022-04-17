@@ -20,13 +20,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sample_sales_app.MainActivity
-import com.example.sample_sales_app.R
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.get_data.TotalAmount
 import com.example.sample_sales_app.ui.theme.Purple700
 import com.example.sample_sales_app.ui.theme.White
+import com.example.sample_sales_app.utils.APP_NAME
 import com.example.sample_sales_app.view_model.MainActivityState
 import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
@@ -36,7 +35,7 @@ enum class MainScreenTags {
 }
 
 enum class MainScreenMessages(val message: String) {
-    HEADER(MainActivity.getContext().resources.getString(R.string.app_name)),
+    HEADER(APP_NAME),
     DROPDOWN_INITIAL("Select an order"),
     RESULT("Total amount: ")
 }
