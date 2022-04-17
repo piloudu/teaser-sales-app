@@ -1,12 +1,18 @@
 package com.example.sample_sales_app.screens
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +36,7 @@ enum class LoginScreenMessages(val message: String) {
 
 @Composable
 fun LoginScreen(modifier: Modifier) {
+    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED)
     Box(modifier = modifier
         .testTag(LoginScreenTags.LOGIN_SCREEN.name)
         .clickable {
@@ -139,6 +146,29 @@ fun ArrowsShape() {
             ArrowEmoji(text = "↘️")
         }
     }
+}
+
+/**
+ * Used to block the landscape view in the LoginScreen
+ */
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = orientation
+        onDispose {
+            // restore original orientation when view disappears
+            activity.requestedOrientation = originalOrientation
+        }
+    }
+}
+
+private fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
