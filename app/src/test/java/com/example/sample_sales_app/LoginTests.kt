@@ -11,6 +11,7 @@ import com.example.sample_sales_app.view_model.MainViewModel
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import org.junit.Rule
 import org.junit.jupiter.api.*
 
 class LoginTests {
@@ -36,10 +37,9 @@ class LoginTests {
     }
 
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    @DisplayName("On JSON retrieve")
+    @DisplayName("Retrieves currencies data for")
     @Nested
     inner class DeserializeCurrencyChange {
-        private val mockCurrencyChange = """{"from": "CAD", "to": "EUR", "rate": "0.76"}"""
 
         @BeforeAll
         fun init() {
@@ -48,14 +48,21 @@ class LoginTests {
             }
         }
 
-        @DisplayName("should deserialize mock individual element")
+        @DisplayName("CAD to EUR")
         @Test
-        fun `is currency sample deserialized properly`() {
-            val currencyChange: CurrencyChange = mapper.readValue(mockCurrencyChange)
-            currencyChange shouldBe CurrencyChange(CAD, EUR, "0.76")
+        fun `properly retrieves first currency change`() {
+            val currencyChange: List<CurrencyChange> = mapper.readValue(mockCurrencyChanges)
+            currencyChange[1] shouldBe CurrencyChange(CAD, EUR, "0.732")
         }
 
-        @DisplayName("should deserialize the currency change list")
+        @DisplayName("USD to EUR")
+        @Test
+        fun `properly retrieves second currency change`() {
+            val currencyChange: List<CurrencyChange> = mapper.readValue(mockCurrencyChanges)
+            currencyChange[2] shouldBe CurrencyChange(USD, EUR, "0.736")
+        }
+
+        @DisplayName("all of them")
         @Test
         fun `is currency JSON deserializer properly`() {
             val currencyChanges: List<CurrencyChange> = result.message.deserialize()
@@ -63,15 +70,23 @@ class LoginTests {
         }
     }
 
+    @DisplayName("Retrieves order data for")
     @Nested
     inner class DeserializeOrder {
-        private val mockOrder = """{"sku": "T2006", "amount": "10.00", "currency": "USD"}"""
+        @get:Rule
+        val ordersData: List<Order> = mockOrders.deserialize()
 
-        @DisplayName("should deserialize mock individual element")
+        @DisplayName("first order")
         @Test
-        fun `is orders JSON deserialized properly`() {
-            val order: Order = mapper.readValue(mockOrder)
-            order shouldBe Order("T2006", "10.00", USD)
+        fun `properly retrieves first order data`() {
+            ordersData[0] shouldBe Order("T2006", "10.00", USD)
+        }
+
+        @DisplayName("second order")
+        @Test
+        fun `properly retrieves first second data`() {
+            val ordersData: List<Order> = mockOrders.deserialize()
+            ordersData[1] shouldBe Order("T2006", "7.63", EUR)
         }
     }
 

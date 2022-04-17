@@ -14,3 +14,14 @@ internal fun withTestScope(scope: suspend CoroutineScope.() -> Unit) {
         scope()
     }
 }
+val mockOrders = """ 
+    [{ "sku": "T2006", "amount": "10.00", "currency": "USD" },
+     { "sku": "T2006", "amount": "7.63", "currency": "EUR"  }]
+""".trimIndent()
+
+val mockCurrencyChanges = """
+    [{ "from": "EUR", "to": "USD", "rate": "1.359" },
+     { "from": "CAD", "to": "EUR", "rate": "0.732" },
+     { "from": "USD", "to": "EUR", "rate": "0.736" },
+     { "from": "EUR", "to": "CAD", "rate": "1.366" }]
+""".trimIndent()
