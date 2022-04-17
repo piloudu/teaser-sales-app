@@ -67,7 +67,7 @@ sealed class MainActivityUserIntent : UserIntent {
 
 
     class SelectCurrency(val currency: Currency) : MainActivityUserIntent() {
-        override fun action() = TotalAmount.getFor(currency = currency)
+        override fun action() = TotalAmount.getFor(targetCurrency = currency)
     }
 
     suspend fun setStateCache() {

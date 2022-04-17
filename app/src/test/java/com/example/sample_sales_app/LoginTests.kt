@@ -76,17 +76,18 @@ class LoginTests {
         @get:Rule
         val ordersData: List<Order> = mockOrders.deserialize()
 
-        @DisplayName("first order")
+        @DisplayName("M2007 order")
         @Test
-        fun `properly retrieves first order data`() {
-            ordersData[0] shouldBe Order("T2006", "10.00", USD)
+        fun `properly retrieves M2007 order data`() {
+            val order = ordersData.find { it.sku == "M2007" }
+            order shouldBe Order("M2007", "34.57", CAD)
         }
 
-        @DisplayName("second order")
+        @DisplayName("B2009 order")
         @Test
-        fun `properly retrieves first second data`() {
-            val ordersData: List<Order> = mockOrders.deserialize()
-            ordersData[1] shouldBe Order("T2006", "7.63", EUR)
+        fun `properly retrieves B2009 order data`() {
+            val order = ordersData.find { it.sku == "B2009" }
+            order shouldBe Order("B2009", "21.23", USD)
         }
     }
 
