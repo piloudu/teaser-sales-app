@@ -28,7 +28,7 @@ import com.example.sample_sales_app.view_model.MainActivityUserIntent
 import com.example.sample_sales_app.view_model.MainViewModel
 
 enum class MainScreenTags {
-    TOPBAR, DROPDOWN, RESULT
+    TOPBAR, DROPDOWN_PANEL, DROPDOWN_MENU, RESULT
 }
 
 enum class MainScreenMessages(val message: String) {
@@ -61,7 +61,6 @@ fun MainScreen(
         Spacer(modifier = Modifier.weight(1f))
         DropdownPanel(
             modifier = Modifier
-                .testTag(MainScreenTags.DROPDOWN.name)
                 .weight(2f)
         )
         if (isVertical()) Spacer(modifier = Modifier.weight(1f))
@@ -116,9 +115,12 @@ fun DropdownPanel(
     var expanded: Boolean by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
 
-    Box(modifier) {
+    Box(
+        modifier
+    ) {
         Row(
             Modifier
+                .testTag(MainScreenTags.DROPDOWN_PANEL.name)
                 .clickable {
                     expanded = !expanded
                 },
@@ -145,6 +147,7 @@ fun DropdownPanel(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier
+                    .testTag(MainScreenTags.DROPDOWN_MENU.name)
                     .width((configuration.screenWidthDp.dp / 2))
                     .height(300.dp)
             ) {
