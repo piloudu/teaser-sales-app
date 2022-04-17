@@ -50,7 +50,7 @@ object Cache {
             usedCurrencies.add(from)
             currencies.removeAll(usedCurrencies)
             for (to in currencies)
-                if (!currenciesData.hasChange(from.name, to.name) || !currenciesData.hasInverseChange(from.name, to.name))
+                if (!currenciesData.hasChange(from, to) || !currenciesData.hasInverseChange(from, to))
                     result.add(getCurrencyChangeFor(from, to, currenciesData))
         }
         return result.toList()
@@ -61,17 +61,17 @@ object Cache {
         to: Currency,
         currencyChanges: List<CurrencyChange>
     ): CurrencyChange {
-        val rate = rateCalculator(from.name, to.name, currencyChanges)
+        val rate = rateCalculator(from, to, currencyChanges)
         return CurrencyChange(
-            from.name,
-            to.name,
+            from,
+            to,
             rate
         )
     }
 
     private fun rateCalculator(
-        from: String,
-        to: String,
+        from: Currency,
+        to: Currency,
         currencyChanges: List<CurrencyChange>
     ): String {
         var rate = ""
@@ -109,7 +109,7 @@ object Cache {
             toMatches,
             ConversionCase.INVERSE
         )
-        return rate//.ifEmpty { "Unable to get money conversion" }
+        return rate
     }
 
     private fun calculateRateOneMissingStep(
@@ -150,7 +150,7 @@ object Cache {
             }
         }
         return rate?.toString()
-            ?: "" //throw(Exception("Null rate for Conversion: ${conversionCase.name}"))
+            ?: ""
     }
 }
 

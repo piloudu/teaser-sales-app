@@ -5,15 +5,15 @@ enum class Currency {
 }
 
 data class CurrencyChange(
-    val from: String,
-    val to: String,
+    val from: Currency,
+    val to: Currency,
     val rate: String
 )
 
 data class Order(
     val sku: String,
     val amount: String,
-    val currency: String
+    val currency: Currency
 )
 
 data class CacheData(

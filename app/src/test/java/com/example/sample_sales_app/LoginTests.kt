@@ -1,6 +1,7 @@
 package com.example.sample_sales_app
 
 import com.example.sample_sales_app.data_model.CacheData
+import com.example.sample_sales_app.data_model.Currency.*
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.data_model.Order
 import com.example.sample_sales_app.get_data.*
@@ -51,7 +52,7 @@ class LoginTests {
         @Test
         fun `is currency sample deserialized properly`() {
             val currencyChange: CurrencyChange = mapper.readValue(mockCurrencyChange)
-            currencyChange shouldBe CurrencyChange("CAD", "EUR", "0.76")
+            currencyChange shouldBe CurrencyChange(CAD, EUR, "0.76")
         }
 
         @DisplayName("should deserialize the currency change list")
@@ -70,7 +71,7 @@ class LoginTests {
         @Test
         fun `is orders JSON deserialized properly`() {
             val order: Order = mapper.readValue(mockOrder)
-            order shouldBe Order("T2006", "10.00", "USD")
+            order shouldBe Order("T2006", "10.00", USD)
         }
     }
 

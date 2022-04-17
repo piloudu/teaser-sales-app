@@ -25,12 +25,12 @@ fun toastMessage(message: String) {
 suspend infix fun Currency.changeToOrEmpty(currency: Currency): String {
     val currencyChanges = Cache.get().currencyChanges
     var rate = ""
-    currencyChanges.find { it.from == this.name && it.to == currency.name }?.takeIf {
+    currencyChanges.find { it.from == this && it.to == currency }?.takeIf {
         it.rate.isNotEmpty()
     }?.let {
         return it.rate
     }
-    currencyChanges.find { it.from == currency.name && it.to == this.name }?.takeIf {
+    currencyChanges.find { it.from == currency && it.to == this }?.takeIf {
         it.rate.isNotEmpty()
     }?.let {
         rate = (1 / it.rate.toDouble()).toString()
@@ -38,13 +38,13 @@ suspend infix fun Currency.changeToOrEmpty(currency: Currency): String {
     return rate
 }
 
-fun List<CurrencyChange>.hasChange(from: String, to: String): Boolean {
+fun List<CurrencyChange>.hasChange(from: Currency, to: Currency): Boolean {
     return this.find { it.from == from && it.to == to }?.let {
         true
     } ?: false
 }
 
-fun List<CurrencyChange>.hasInverseChange(from: String, to: String): Boolean {
+fun List<CurrencyChange>.hasInverseChange(from: Currency, to: Currency): Boolean {
     return this.find { it.from == to && it.to == from }?.let {
         true
     } ?: false
