@@ -18,6 +18,8 @@ abstract class Reducer<S : UiState, in I : UserIntent>(initialState: S) {
     abstract fun reduce(oldState: S, userIntent: I)
 }
 
-interface UserIntent
+interface UserIntent {
+    fun action(): String = "Empty action"
+}
 
 interface UiState

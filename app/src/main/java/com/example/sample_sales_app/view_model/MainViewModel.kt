@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sample_sales_app.data_model.CacheData
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.get_data.Cache
+import com.example.sample_sales_app.get_data.TotalAmount
 import com.example.sample_sales_app.utils.toastMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
     fun sendIntent(userIntent: MainActivityUserIntent) {
         viewModelScope.launch(Dispatchers.Main) {
             userIntent.setStateCache()
+            userIntent.action()
         }
         reducer.sendIntent(userIntent)
     }
@@ -59,8 +61,14 @@ object MainViewModel : BaseViewModel<MainActivityState, MainActivityUserIntent>(
 
 sealed class MainActivityUserIntent : UserIntent {
     object Login : MainActivityUserIntent()
-    class SelectOrder(val orderCode: String) : MainActivityUserIntent()
-    class SelectCurrency(val currency: Currency) : MainActivityUserIntent()
+    class SelectOrder(val orderCode: String) : MainActivityUserIntent() {
+        override fun action() = TotalAmount.getFor(orderCode = orderCode)
+    }
+
+
+    class SelectCurrency(val currency: Currency) : MainActivityUserIntent() {
+        override fun action() = TotalAmount.getFor(currency = currency)
+    }
 
     suspend fun setStateCache() {
         val oldCache = MainViewModel.state.value.cache
