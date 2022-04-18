@@ -10,7 +10,7 @@ import timber.log.Timber
 object RestCall {
     private val client = OkHttpClient()
 
-    suspend fun restCallFor(url: HttpUrls): RestResult {
+    suspend fun callFor(url: HttpUrls): RestResult {
         val restResult = try {
             withContext(Dispatchers.IO) {
                 val request = Request.Builder().url(url.string).build()

@@ -2,7 +2,6 @@ package com.example.sample_sales_app.utils
 
 import android.widget.Toast
 import com.example.sample_sales_app.MainActivity
-import com.example.sample_sales_app.R
 import com.example.sample_sales_app.data_model.Currency
 import com.example.sample_sales_app.data_model.CurrencyChange
 import com.example.sample_sales_app.get_data.Cache

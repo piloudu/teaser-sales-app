@@ -24,7 +24,7 @@ class LoginTests {
     @Test
     fun `is REST call result for currencyRequest a success`() {
         withTestScope {
-            result = RestCall.restCallFor(HttpUrls.CURRENCIES_URL)
+            result = RestCall.callFor(HttpUrls.CURRENCIES_URL)
             println(result.message)
             result.status shouldBe RestCall.RestStatus.SUCCESS
         }
@@ -34,7 +34,7 @@ class LoginTests {
     @Test
     fun `is REST call result for ordersRequest a success`() {
         withTestScope {
-            result = RestCall.restCallFor(HttpUrls.ORDERS_URL)
+            result = RestCall.callFor(HttpUrls.ORDERS_URL)
             result.status shouldBe RestCall.RestStatus.SUCCESS
         }
     }
@@ -47,7 +47,7 @@ class LoginTests {
         @BeforeAll
         fun init() {
             withTestScope {
-                result = RestCall.restCallFor(HttpUrls.CURRENCIES_URL)
+                result = RestCall.callFor(HttpUrls.CURRENCIES_URL)
             }
         }
 

@@ -24,9 +24,9 @@ object Cache {
 
     private suspend fun getNewCache(): CacheData {
         val currenciesRequest: RestResult =
-            RestCall.restCallFor(HttpUrls.CURRENCIES_URL)
+            RestCall.callFor(HttpUrls.CURRENCIES_URL)
         val ordersRequest: RestResult =
-            RestCall.restCallFor(HttpUrls.ORDERS_URL)
+            RestCall.callFor(HttpUrls.ORDERS_URL)
 
         return if (currenciesRequest.isSuccess() && ordersRequest.isSuccess()) {
             val currenciesData: List<CurrencyChange> = currenciesRequest.message.deserialize()
